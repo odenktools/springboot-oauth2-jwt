@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: auth_server
+  profiles:
+    active: local
+  cors:
+    allowed-origins: "*"
+    allowed-methods: "*"
+    allowed-headers: "*"
+    exposed-headers: "Authorization,Link,X-Total-Count"
+    allow-credentials: true
+server:
+  port: ${PORT:8090}
+  servlet:
+    session:
+      cookie:
+        name: JWT_SESSIONID
+  jetty:
+    acceptors: 4

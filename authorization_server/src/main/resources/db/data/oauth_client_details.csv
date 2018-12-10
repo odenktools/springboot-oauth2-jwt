@@ -1,0 +1,4 @@
+"client_id","resource_ids","client_secret","scope","authorized_grant_types","web_server_redirect_uri","authorities","access_token_validity","refresh_token_validity","additional_information","autoapprove"
+"server-server","resource_id","e97d1df0cd0b579a5f9424ad6ee15d3d","read,write,trust","client_credentials",NULL,NULL,9392000,2592000,NULL,true
+"external-server","resource_id","4aeadd71ce0d6d465410677fa4579148","read,write,trust","client_credentials",NULL,NULL,9392000,2592000,NULL,true
+"android-client","resource_id","297752750774c9b587c32ddb135aed93","read,write,trust","password,refresh_token,implicit,authorization_code",NULL,NULL,2392000,2592000,NULL,true

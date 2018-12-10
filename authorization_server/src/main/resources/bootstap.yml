@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: auth_server
+# SERVER Properties
+server:
+  port: ${PORT:8090}
+  servlet:
+    session:
+      cookie:
+        name: JWT_SESSIONID

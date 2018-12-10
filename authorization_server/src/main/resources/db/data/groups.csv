@@ -1,0 +1,4 @@
+"named","coded","named_description","is_active","is_builtin"
+"Role SuperAdmin","ROLE_SUPER_ADMIN","Role For SuperAdmin",1,1
+"Role Mobile","ROLE_MOBILE","Role For Mobile Client",1,1
+"Role Server To Server","ROLE_INTERNAL","Role For Server to server communication",1,1

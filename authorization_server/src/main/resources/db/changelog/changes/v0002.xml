@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="Odenktools" id="oauth_client_details-data">
+        <loadData catalogName="oauth_client_details"
+                  encoding="UTF-8"
+                  file="db/data/oauth_client_details.csv"
+                  schemaName="public"
+                  separator=","
+                  quotchar="&quot;"
+                  tableName="oauth_client_details">
+            <column name="client_id" type="STRING"/>
+            <column name="resource_ids" type="STRING"/>
+            <column name="client_secret" type="STRING"/>
+            <column name="scope" type="STRING"/>
+            <column name="authorized_grant_types" type="STRING"/>
+            <column name="web_server_redirect_uri" type="STRING"/>
+            <column name="authorities" type="STRING"/>
+            <column name="access_token_validity" type="NUMERIC"/>
+            <column name="refresh_token_validity" type="NUMERIC"/>
+            <column name="additional_information" type="STRING"/>
+            <column name="autoapprove" type="STRING"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet author="Rahyan" id="users-data">
+        <loadData catalogName="customers"
+                  encoding="UTF-8"
+                  file="db/data/customers.csv"
+                  schemaName="public"
+                  separator=","
+                  quotchar="&quot;"
+                  tableName="customers">
+            <column name="username" type="STRING"/>
+            <column name="email" type="STRING"/>
+            <column defaultValue="" name="phone_number" type="STRING"/>
+            <column name="password" type="STRING"/>
+            <column defaultValueNumeric="0" name="is_active" type="NUMERIC"/>
+            <column defaultValueNumeric="0" name="is_verified" type="NUMERIC"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet author="Rahyan" id="groups-data">
+        <loadData catalogName="groups"
+                  encoding="UTF-8"
+                  file="db/data/groups.csv"
+                  schemaName="public"
+                  separator=","
+                  quotchar="&quot;"
+                  tableName="groups">
+            <column name="named" type="STRING"/>
+            <column name="coded" type="STRING"/>
+            <column name="named_description" type="STRING"/>
+            <column defaultValueNumeric="0" name="is_active" type="NUMERIC"/>
+            <column defaultValueNumeric="0" name="is_builtin" type="NUMERIC"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet author="Rahyan" id="permissions-data">
+        <loadData catalogName="permissions"
+                  encoding="UTF-8"
+                  file="db/data/permissions.csv"
+                  schemaName="public"
+                  separator=","
+                  quotchar="&quot;"
+                  tableName="permissions">
+            <column name="name_permission" type="STRING"/>
+            <column name="readable_name" type="STRING"/>
+        </loadData>
+    </changeSet>
+
+    <!--<changeSet author="Rahyan" id="users_groups_rel-data">
+        <loadData catalogName="users_groups_rel"
+                  encoding="UTF-8"
+                  file="db/data/groups_rel.csv"
+                  schemaName="public"
+                  separator=","
+                  quotchar="&quot;"
+                  tableName="users_groups_rel">
+        </loadData>
+    </changeSet>-->
+
+    <changeSet author="Rahyan" id="users_permissions_rel-data">
+        <loadData catalogName="permissions_rel"
+                  encoding="UTF-8"
+                  file="db/data/permissions_rel.csv"
+                  schemaName="public"
+                  separator=","
+                  quotchar="&quot;"
+                  tableName="permissions_rel">
+            <column name="role_id" type="NUMERIC"/>
+            <column name="perm_id" type="NUMERIC"/>
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>

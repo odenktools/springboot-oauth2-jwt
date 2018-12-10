@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="Odenktools" id="oauth_access_token">
+        <createTable tableName="oauth_access_token">
+            <column name="authentication_id" type="TEXT">
+                <constraints primaryKey="true" primaryKeyName="pk_oauth_access_token"/>
+            </column>
+            <column name="token" type="BYTEA"/>
+            <column name="token_id" type="TEXT"/>
+            <column name="user_name" type="TEXT"/>
+            <column name="client_id" type="TEXT"/>
+            <column name="authentication" type="BYTEA"/>
+            <column name="refresh_token" type="TEXT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="oauth_approvals">
+        <createTable tableName="oauth_approvals">
+            <column name="userId" type="TEXT"/>
+            <column name="clientId" type="TEXT"/>
+            <column name="scope" type="TEXT"/>
+            <column name="status" type="VARCHAR(10)"/>
+            <column name="expires_at" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="last_modified_at" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="oauth_client_details">
+        <createTable tableName="oauth_client_details">
+            <column name="client_id" type="VARCHAR(255)">
+                <constraints primaryKey="true" primaryKeyName="pk_oauth_client_details"/>
+            </column>
+            <column name="resource_ids" type="TEXT"/>
+            <column name="client_secret" type="TEXT"/>
+            <column name="scope" type="TEXT"/>
+            <column name="authorized_grant_types" type="TEXT"/>
+            <column name="web_server_redirect_uri" type="TEXT"/>
+            <column name="authorities" type="TEXT"/>
+            <column name="access_token_validity" type="INTEGER"/>
+            <column name="refresh_token_validity" type="INTEGER"/>
+            <column name="additional_information" type="TEXT"/>
+            <column name="autoapprove" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="oauth_client_token">
+        <createTable tableName="oauth_client_token">
+            <column name="authentication_id" type="VARCHAR(255)">
+                <constraints primaryKey="true" primaryKeyName="pk_oauth_client_token"/>
+            </column>
+            <column name="token" type="BYTEA"/>
+            <column name="token_id" type="VARCHAR(255)"/>
+            <column name="user_name" type="VARCHAR(255)"/>
+            <column name="client_id" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="oauth_code">
+        <createTable tableName="oauth_code">
+            <column name="code" type="VARCHAR(255)">
+                <constraints primaryKey="true" primaryKeyName="pk_oauth_code"/>
+            </column>
+            <column name="authentication" type="BYTEA"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="oauth_refresh_token">
+        <createTable tableName="oauth_refresh_token">
+            <column name="token_id" type="VARCHAR(255)">
+                <constraints primaryKey="true" primaryKeyName="pk_oauth_refresh_token"/>
+            </column>
+            <column name="token" type="BYTEA"/>
+            <column name="authentication" type="BYTEA"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="customers">
+        <createTable tableName="customers">
+            <column autoIncrement="true" name="id_users" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(128)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column defaultValue="" name="phone_number" type="VARCHAR(20)"/>
+            <column name="password" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="is_active" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="is_verified" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_login" type="datetime"/>
+            <column name="created_at" defaultValueComputed="CURRENT_TIMESTAMP" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="datetime"/>
+            <column name="deleted_at" type="datetime"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="customers_groups_rel">
+        <createTable tableName="customers_groups_rel">
+            <column autoIncrement="true" name="id_user_roles" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" defaultValueComputed="CURRENT_TIMESTAMP" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="datetime"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="permissions">
+        <createTable tableName="permissions">
+            <column autoIncrement="true" name="id_perm" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name_permission" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="readable_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" defaultValueComputed="CURRENT_TIMESTAMP" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="datetime"/>
+            <column name="deleted_at" type="datetime"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="permissions_rel">
+        <createTable tableName="permissions_rel">
+            <column autoIncrement="true" name="id_user_perm" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="perm_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" defaultValueComputed="CURRENT_TIMESTAMP" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="datetime"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="groups">
+        <createTable tableName="groups">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="named" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="coded" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="named_description" type="LONGTEXT"/>
+            <column defaultValueNumeric="0" name="is_active" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="is_builtin" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" defaultValueComputed="CURRENT_TIMESTAMP" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="datetime"/>
+            <column name="deleted_at" type="datetime"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

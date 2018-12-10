@@ -1,0 +1,4 @@
+"username","email","phone_number","password","is_active","is_verified"
+"customer_one","customer_one@odenktools.com","6289671910162","4ced259922b6ea8db65c5308be894039",1,1
+"customer_two","customer_two@odenktools.com","6289672020243","4a5e3c974d19a77b0d26fa55391fc8a8",1,1
+"customer_bad","customer_bad@odenktools.com","6289673111381","829e1d9f5c5ae69b9251185a1da50975",0,0
