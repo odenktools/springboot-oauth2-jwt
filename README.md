@@ -2,7 +2,7 @@
 
 Spring Boot 2.0.x OAuth2 JWT Authorization Server with Database (JPA, Hibernate, PostgreSQL)
 
-````bash
+```bash
 keytool -genkey -alias jwt -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore jwt.p12 -keypass odenktools123 -validity 3650
 ```
 
