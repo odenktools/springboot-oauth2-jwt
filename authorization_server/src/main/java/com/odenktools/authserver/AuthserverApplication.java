@@ -14,18 +14,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class AuthserverApplication {
 
-  private static final Logger LOG = LoggerFactory.getLogger(AuthserverApplication.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AuthserverApplication.class);
 
-  public static void main(String[] args) {
+	public static void main(String[] args) {
 
-    SpringApplication.run(AuthserverApplication.class, args);
+		SpringApplication.run(AuthserverApplication.class, args);
 
-    LOG.info("PASSWORD FOR server-server = {}", new CustomPasswordEncoder().encode("server-server"));
-    LOG.info("PASSWORD FOR android-client = {}", new CustomPasswordEncoder().encode("android-client"));
-    LOG.info("PASSWORD FOR external-server = {}", new CustomPasswordEncoder().encode("external-server"));
+		LOG.info("PASSWORD FOR server-server = {}", new CustomPasswordEncoder().encode("server-server"));
+		LOG.info("PASSWORD FOR android-client = {}", new CustomPasswordEncoder().encode("android-client"));
+		LOG.info("PASSWORD FOR external-server = {}", new CustomPasswordEncoder().encode("external-server"));
 
-    LOG.info("PASSWORD FOR customer_one = {}", new CustomPasswordEncoder().encode("customer_one"));
-    LOG.info("PASSWORD FOR customer_two = {}", new CustomPasswordEncoder().encode("customer_two"));
-    LOG.info("PASSWORD FOR customer_bad = {}", new CustomPasswordEncoder().encode("customer_bad"));
-  }
+		LOG.info("PASSWORD FOR customer_one = {}", new CustomPasswordEncoder().encode("customer_one"));
+		LOG.info("PASSWORD FOR customer_two = {}", new CustomPasswordEncoder().encode("customer_two"));
+		LOG.info("PASSWORD FOR customer_bad = {}", new CustomPasswordEncoder().encode("customer_bad"));
+	}
 }

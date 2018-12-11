@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -47,125 +46,144 @@ import java.util.Collection;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter implements ApplicationContextAware {
 
-  private static final Logger LOG = LoggerFactory.getLogger(AuthorizationServerConfig.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AuthorizationServerConfig.class);
 
-  private ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
-  private final DataSource dataSource;
+	private final DataSource dataSource;
 
-  @Autowired
-  @Qualifier("authenticationManagerBean")
-  private AuthenticationManager authenticationManager;
+	private final static String PASS_KEY = "odenktools123";
 
-  @Bean
-  public TokenStore tokenStore() {
+	@Autowired
+	@Qualifier("authenticationManagerBean")
+	private AuthenticationManager authenticationManager;
 
-    return new JdbcTokenStore(this.dataSource);
-  }
+	@Bean
+	public TokenStore tokenStore() {
 
-  public AuthorizationServerConfig(DataSource dataSource) {
+		return new JdbcTokenStore(this.dataSource);
+	}
 
-    this.dataSource = dataSource;
-  }
+	public AuthorizationServerConfig(DataSource dataSource) {
 
-  @Override
-  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-    this.applicationContext = applicationContext;
-  }
+		this.dataSource = dataSource;
+	}
 
-  /**
-   * Akses TABLE oauth_code.
-   *
-   * @return AuthorizationCodeServices
-   */
-  @Bean
-  public AuthorizationCodeServices authorizationCodeServices() {
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 
-    return new CustomJdbcAuthorizationCodeServices(this.dataSource);
-  }
+	/**
+	 * Access TABLE oauth_code.
+	 *
+	 * @return AuthorizationCodeServices
+	 */
+	@Bean
+	public AuthorizationCodeServices authorizationCodeServices() {
 
-  @Bean
-  public DefaultTokenServices tokenServices() {
+		return new CustomJdbcAuthorizationCodeServices(this.dataSource);
+	}
 
-    final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-    defaultTokenServices.setTokenStore(tokenStore());
-    defaultTokenServices.setSupportRefreshToken(true);
-    return defaultTokenServices;
-  }
+	/**
+	 * TokenService.
+	 *
+	 * @return DefaultTokenServices.
+	 */
+	@Bean
+	public DefaultTokenServices tokenServices() {
 
-  @Bean
-  @Primary
-  public PasswordEncoder passwordEncoder() {
+		final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+		defaultTokenServices.setTokenStore(tokenStore());
+		defaultTokenServices.setSupportRefreshToken(true);
+		return defaultTokenServices;
+	}
 
-    return new CustomPasswordEncoder();
-  }
+	/**
+	 * Custom Password Encoded, We not use Bcrypt for encoded.
+	 *
+	 * @return CustomPasswordEncoder.
+	 */
+	@Bean
+	@Primary
+	public PasswordEncoder passwordEncoder() {
 
-  @Bean
-  public JwtAccessTokenConverter accessTokenConverter() {
+		return new CustomPasswordEncoder();
+	}
 
-    JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-    KeyPair keyPair = new KeyStoreKeyFactory(
-        new ClassPathResource("certificate/jwt.p12"),
-        "odenktools123".toCharArray())
-        .getKeyPair("jwt");
-    converter.setKeyPair(keyPair);
-    return converter;
-  }
+	/**
+	 * Convert default token to JWTToken.
+	 *
+	 * @return JwtAccessTokenConverter.
+	 */
+	@Bean
+	public JwtAccessTokenConverter accessTokenConverter() {
 
-  @Override
-  public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
+		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+		KeyPair keyPair = new KeyStoreKeyFactory(
+				new ClassPathResource("certificate/jwt.p12"),
+				PASS_KEY.toCharArray())
+				.getKeyPair("jwt");
+		converter.setKeyPair(keyPair);
+		return converter;
+	}
 
-    //configurer.withClientDetails(clientDetailsService());
+	@Override
+	public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
 
-    configurer
-        .jdbc(this.dataSource)
-        .passwordEncoder(this.passwordEncoder());
-  }
+		//configurer.withClientDetails(clientDetailsService());
 
-  /**
-   * Agar bisa checktoken.
-   * {{api.url}}/oauth/check_token (INI HARUS MENGGUNAKAN BASIC AUTH LAGI)
-   *
-   * @param oauthServer oauth2
-   */
-  @Override
-  public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
+		configurer
+				.jdbc(this.dataSource)
+				.passwordEncoder(this.passwordEncoder());
+	}
 
-    oauthServer.passwordEncoder(this.passwordEncoder())
-        .tokenKeyAccess("permitAll()")
-        .checkTokenAccess("isAuthenticated()");
-  }
+	/**
+	 * Customer must have ```CheckToken permission```.
+	 * {{api.url}}/oauth/check_token
+	 *
+	 * @param oauthServer oauth2
+	 */
+	@Override
+	public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
 
-  @Override
-  public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+		oauthServer.passwordEncoder(this.passwordEncoder())
+				.tokenKeyAccess("permitAll()")
+				.checkTokenAccess("isAuthenticated()");
+	}
 
-    Collection<TokenEnhancer> tokenEnhancers = applicationContext.getBeansOfType(TokenEnhancer.class).values();
-    TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-    tokenEnhancerChain.setTokenEnhancers(new ArrayList<>(tokenEnhancers));
-    endpoints
-        .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
-        .authenticationManager(authenticationManager)
-        .approvalStoreDisabled()
-        .tokenStore(this.tokenStore())
-        .tokenEnhancer(tokenEnhancerChain)
-        .accessTokenConverter(this.accessTokenConverter())
-        .authorizationCodeServices(this.authorizationCodeServices());
-  }
+	@Override
+	public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
 
-  @EventListener
-  public void authSuccessEventListener(AuthenticationSuccessEvent event) {
+		Collection<TokenEnhancer> tokenEnhancers = applicationContext.getBeansOfType(TokenEnhancer.class).values();
+		TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+		tokenEnhancerChain.setTokenEnhancers(new ArrayList<>(tokenEnhancers));
+		
+		// @formatter:off
+		endpoints
+				.authenticationManager(authenticationManager)
+				.approvalStoreDisabled()
+				.tokenStore(this.tokenStore())
+				.tokenEnhancer(tokenEnhancerChain)
+				.accessTokenConverter(this.accessTokenConverter())
+				.authorizationCodeServices(this.authorizationCodeServices());
+		// @formatter:on
+	}
 
-    Authentication auth = event.getAuthentication();
-    LOG.debug("LOGIN SUCCESS [CRED = {}] [PRINCIPAL = {}] ", auth.getDetails(), auth.getPrincipal());
-  }
+	@EventListener
+	public void authSuccessEventListener(AuthenticationSuccessEvent event) {
 
-  @EventListener
-  public void authFailedEventListener(AbstractAuthenticationFailureEvent event) {
+		Authentication auth = event.getAuthentication();
+		LOG.debug("LOGIN SUCCESS [CRED = {}] [PRINCIPAL = {}] ", auth.getDetails(), auth.getPrincipal());
+	}
 
-    Authentication auth = event.getAuthentication();
+	@EventListener
+	public void authFailedEventListener(AbstractAuthenticationFailureEvent event) {
 
-    LOG.debug("LOGIN FAILED [CRED = {}] [PRINCIPAL = {}] ", auth.getCredentials(), auth.getPrincipal());
-  }
+		Authentication auth = event.getAuthentication();
+
+		LOG.debug("LOGIN FAILED [CRED = {}] [PRINCIPAL = {}] ", auth.getCredentials(), auth.getPrincipal());
+	}
 
   /*class CustomOauth2RequestFactory extends DefaultOAuth2RequestFactory {
     @Autowired

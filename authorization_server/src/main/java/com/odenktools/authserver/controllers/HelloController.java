@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class HelloController {
 
-  private static final Logger LOG = LoggerFactory.getLogger(HelloController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(HelloController.class);
 
-  @RequestMapping(value = "/hello",
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> user() {
+	@RequestMapping(value = "/hello",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> user() {
 
-    JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty("messages", "HelloController");
-    return new ResponseEntity<>(jsonObject.toString(), HttpStatus.FOUND);
-  }
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("messages", "HelloController");
+		return new ResponseEntity<>(jsonObject.toString(), HttpStatus.FOUND);
+	}
 
 }

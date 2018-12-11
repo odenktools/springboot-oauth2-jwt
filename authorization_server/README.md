@@ -12,6 +12,8 @@ keytool -list -rfc --keystore jwt.jks | openssl x509 -inform pem -pubkey
 
 [Oauth Playground](https://developers.google.com/oauthplayground/)
 
+[Spring Oauth2 Docs](https://projects.spring.io/spring-security-oauth/docs/oauth2.html)
+
 [Secure Server To Server](https://dzone.com/articles/build-a-spring-boot-app-with-secure-server-to-serv)
 
 [Tutorial Oauth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)

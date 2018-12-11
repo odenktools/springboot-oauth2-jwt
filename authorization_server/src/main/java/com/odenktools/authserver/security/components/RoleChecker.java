@@ -11,47 +11,45 @@ import java.security.Principal;
 @Component("roleChecker")
 public class RoleChecker {
 
-  /**
-   * We define SUPER ADMIN ROLE to allow all action.
-   * This Role must insert to database.
-   */
-  private static String SUPERADMIN = "ROLE_SUPER_ADMIN";
+	/**
+	 * We define SUPER ADMIN ROLE to allow all action.
+	 * This Role must insert to database.
+	 */
+	private static String SUPERADMIN = "ROLE_SUPER_ADMIN";
 
-  /**
-   * We define ROLE_MOBILE to allow action.
-   * This Role must insert to database.
-   */
-  public static String ROLE_MOBILE = "ROLE_MOBILE:%s";
+	/**
+	 * We define ROLE_MOBILE to allow action.
+	 * This Role must insert to database.
+	 */
+	public static String ROLE_MOBILE = "ROLE_MOBILE:%s";
 
-  private static final Logger LOG = LoggerFactory.getLogger(RoleChecker.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RoleChecker.class);
 
-  public static boolean hasValidRole(Principal principal) {
+	public static boolean hasValidRole(Principal principal) {
 
-    return hasValidRole(principal, null, null);
-  }
+		return hasValidRole(principal, null, null);
+	}
 
-  public static boolean hasValidRole(Principal principal, String user) {
+	public static boolean hasValidRole(Principal principal, String user) {
 
-    return hasValidRole(principal, null, user);
-  }
+		return hasValidRole(principal, null, user);
+	}
 
-  public static boolean hasValidRole(Principal principal, String company, String user) {
+	public static boolean hasValidRole(Principal principal, String company, String user) {
 
-    OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) principal;
-    for (GrantedAuthority ga : oAuth2Authentication.getAuthorities()) {
-      LOG.info("ROLE_PRINCIPAL {}", ga.getAuthority());
-      // Login using SUPERADMIN???
-      if (ga.getAuthority().equalsIgnoreCase(SUPERADMIN)) {
-        return true;
-      }
-      else if (user != null &&
-          ga.getAuthority().equalsIgnoreCase(String.format(ROLE_MOBILE, user.toUpperCase()))) {
-        return true;
-      }
-      else {
-        throw new ResourceUnauthorizedException();
-      }
-    }
-    throw new ResourceUnauthorizedException();
-  }
+		OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) principal;
+		for (GrantedAuthority ga : oAuth2Authentication.getAuthorities()) {
+			LOG.info("ROLE_PRINCIPAL {}", ga.getAuthority());
+			// Login using SUPERADMIN???
+			if (ga.getAuthority().equalsIgnoreCase(SUPERADMIN)) {
+				return true;
+			} else if (user != null &&
+					ga.getAuthority().equalsIgnoreCase(String.format(ROLE_MOBILE, user.toUpperCase()))) {
+				return true;
+			} else {
+				throw new ResourceUnauthorizedException();
+			}
+		}
+		throw new ResourceUnauthorizedException();
+	}
 }

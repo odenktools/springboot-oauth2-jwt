@@ -20,52 +20,52 @@ import java.util.Optional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-  private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+	private static final org.slf4j.Logger Logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
-  private final ICustomer iCustomer;
+	private final ICustomer iCustomer;
 
-  @Autowired
-  public CustomUserDetailsService(ICustomer iCustomer) {
+	@Autowired
+	public CustomUserDetailsService(ICustomer iCustomer) {
 
-    this.iCustomer = iCustomer;
-  }
+		this.iCustomer = iCustomer;
+	}
 
-  @Transactional(readOnly = true)
-  @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	@Transactional(readOnly = true)
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-    Logger.debug("with username {}", username);
+		Logger.debug("with username {}", username);
 
-    Optional<Customer> customer = this.iCustomer.findByUsername(username);
-    if (!customer.isPresent()) {
-      throw new UsernameNotFoundException("Invalid username or password.");
-    }
-    return new PrincipalAdminDetail(customer.get());
-  }
+		Optional<Customer> customer = this.iCustomer.findByUsername(username);
+		if (!customer.isPresent()) {
+			throw new UsernameNotFoundException("Invalid username or password.");
+		}
+		return new PrincipalAdminDetail(customer.get());
+	}
 
-  @Transactional(readOnly = true)
-  public List<Customer> findAll() {
+	@Transactional(readOnly = true)
+	public List<Customer> findAll() {
 
-    List<Customer> list = new ArrayList<>();
-    this.iCustomer.findAll().iterator().forEachRemaining(list::add);
-    return list;
-  }
+		List<Customer> list = new ArrayList<>();
+		this.iCustomer.findAll().iterator().forEachRemaining(list::add);
+		return list;
+	}
 
-  @Transactional
-  public void delete(Customer id) {
+	@Transactional
+	public void delete(Customer id) {
 
-    this.iCustomer.delete(id);
-  }
+		this.iCustomer.delete(id);
+	}
 
-  @Transactional(readOnly = true)
-  public Optional<Customer> findOne(long id) {
+	@Transactional(readOnly = true)
+	public Optional<Customer> findOne(long id) {
 
-    return this.iCustomer.findById(id);
-  }
+		return this.iCustomer.findById(id);
+	}
 
-  @Transactional
-  public Customer save(Customer user) {
+	@Transactional
+	public Customer save(Customer user) {
 
-    return this.iCustomer.save(user);
-  }
+		return this.iCustomer.save(user);
+	}
 }

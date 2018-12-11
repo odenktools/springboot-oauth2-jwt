@@ -1,7 +1,5 @@
 package com.odenktools.authserver.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,69 +17,56 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
-    prePostEnabled = true,
-    securedEnabled = true
+		prePostEnabled = true,
+		securedEnabled = true
 )
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private static final Logger Logger = LoggerFactory.getLogger(WebSecurityConfig.class);
+	//private static final Logger Logger = LoggerFactory.getLogger(WebSecurityConfig.class);
 
-  @Resource(name = "customUserDetailsService")
-  private UserDetailsService userDetailsService;
+	@Resource(name = "customUserDetailsService")
+	private UserDetailsService userDetailsService;
 
-  //private CustomUserDetailsService customUserDetailsService;
+	//private CustomUserDetailsService customUserDetailsService;
 
-  private String[] actuatorEndpoints() {
+	/**
+	 * If grant_type != client_credentials.
+	 *
+	 * @param auth AuthenticationManagerBuilder
+	 * @throws Exception Error jika data tidak sesuai.
+	 */
+	@Autowired
+	public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
 
-    return new String[]{
-        EndPointList.AUTOCONFIG_ENDPOINT,
-        EndPointList.BEANS_ENDPOINT,
-        EndPointList.CONFIGPROPS_ENDPOINT,
-        EndPointList.ENV_ENDPOINT,
-        EndPointList.MAPPINGS_ENDPOINT,
-        EndPointList.METRICS_ENDPOINT,
-        EndPointList.SHUTDOWN_ENDPOINT
-    };
-  }
+		auth
+				.userDetailsService(this.userDetailsService)
+				.passwordEncoder(new CustomPasswordEncoder());
+	}
 
-  /**
-   * If grant_type != client_credentials.
-   *
-   * @param auth AuthenticationManagerBuilder
-   * @throws Exception Error jika data tidak sesuai.
-   */
-  @Autowired
-  public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
+	@Override
+	@Bean
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
 
-    auth
-        .userDetailsService(this.userDetailsService)
-        .passwordEncoder(new CustomPasswordEncoder());
-  }
+	@Override
+	public void configure(HttpSecurity http) throws Exception {
 
-  @Override
-  @Bean
-  public AuthenticationManager authenticationManagerBean() throws Exception {
-    return super.authenticationManagerBean();
-  }
-
-  @Override
-  public void configure(HttpSecurity http) throws Exception {
-
-    http
-        .exceptionHandling()
-        .authenticationEntryPoint
-            ((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
-        .and()
-        .csrf().disable()
-        .headers().frameOptions().disable()
-        .and()
-        .authorizeRequests()
-        .antMatchers("/actuator/**").permitAll()
-        .antMatchers("/swagger-ui/index.html").permitAll()
-        .and()
-        .authorizeRequests()
-        .anyRequest().authenticated();
-  }
+		http
+				.exceptionHandling()
+				.authenticationEntryPoint
+						((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+				.and()
+				.csrf().disable()
+				.headers().frameOptions().disable()
+				.and()
+				.authorizeRequests()
+				.antMatchers("/actuator/**").permitAll()
+				.antMatchers("/swagger-ui/index.html").permitAll()
+				.and()
+				.authorizeRequests()
+				.anyRequest().authenticated();
+	}
 
   /*@Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {

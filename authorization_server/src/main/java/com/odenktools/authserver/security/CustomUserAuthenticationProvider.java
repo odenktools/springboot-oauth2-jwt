@@ -11,20 +11,20 @@ import java.util.List;
 
 public class CustomUserAuthenticationProvider implements AuthenticationProvider {
 
-  @Override
-  public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+	@Override
+	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-    List<GrantedAuthority> grantedAuthorities = new ArrayList();
-    UsernamePasswordAuthenticationToken auth = new
-        UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
-        authentication.getCredentials(), grantedAuthorities);
-    return auth;
-  }
+		List<GrantedAuthority> grantedAuthorities = new ArrayList();
+		UsernamePasswordAuthenticationToken auth = new
+				UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
+				authentication.getCredentials(), grantedAuthorities);
+		return auth;
+	}
 
-  @Override
-  public boolean supports(Class<?> authentication) {
+	@Override
+	public boolean supports(Class<?> authentication) {
 
-    return true;
-  }
+		return true;
+	}
 
 }

@@ -10,21 +10,21 @@ import java.io.ObjectStreamClass;
 
 class FixSerialVersionUUID extends ObjectInputStream {
 
-  FixSerialVersionUUID(byte[] bytes) throws IOException {
+	FixSerialVersionUUID(byte[] bytes) throws IOException {
 
-    super(new ByteArrayInputStream(bytes));
-  }
+		super(new ByteArrayInputStream(bytes));
+	}
 
-  @Override
-  protected ObjectStreamClass readClassDescriptor() throws IOException, ClassNotFoundException {
+	@Override
+	protected ObjectStreamClass readClassDescriptor() throws IOException, ClassNotFoundException {
 
-    ObjectStreamClass resultClassDescriptor = super.readClassDescriptor();
+		ObjectStreamClass resultClassDescriptor = super.readClassDescriptor();
 
-    if (resultClassDescriptor.getName().equals(SimpleGrantedAuthority.class.getName())) {
-      ObjectStreamClass mostRecentSerialVersionUUID = ObjectStreamClass.lookup(SimpleGrantedAuthority.class);
-      return mostRecentSerialVersionUUID;
-    }
+		if (resultClassDescriptor.getName().equals(SimpleGrantedAuthority.class.getName())) {
+			ObjectStreamClass mostRecentSerialVersionUUID = ObjectStreamClass.lookup(SimpleGrantedAuthority.class);
+			return mostRecentSerialVersionUUID;
+		}
 
-    return resultClassDescriptor;
-  }
+		return resultClassDescriptor;
+	}
 }

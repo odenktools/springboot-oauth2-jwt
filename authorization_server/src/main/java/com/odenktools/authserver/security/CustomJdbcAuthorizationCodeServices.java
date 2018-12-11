@@ -8,19 +8,19 @@ import javax.sql.DataSource;
 
 public class CustomJdbcAuthorizationCodeServices extends JdbcAuthorizationCodeServices {
 
-  private RandomValueStringGenerator generator;
+	private RandomValueStringGenerator generator;
 
-  public CustomJdbcAuthorizationCodeServices(DataSource dataSource) {
+	public CustomJdbcAuthorizationCodeServices(DataSource dataSource) {
 
-    super(dataSource);
-    this.generator = new RandomValueStringGenerator(32);
-  }
+		super(dataSource);
+		this.generator = new RandomValueStringGenerator(32);
+	}
 
-  public String createAuthorizationCode(OAuth2Authentication authentication) {
+	public String createAuthorizationCode(OAuth2Authentication authentication) {
 
-    String code = this.generator.generate();
-    store(code, authentication);
-    return code;
-  }
+		String code = this.generator.generate();
+		store(code, authentication);
+		return code;
+	}
 
 }

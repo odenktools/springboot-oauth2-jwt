@@ -1,8 +1,8 @@
 package com.odenktools.authserver.security.user;
 
-import com.odenktools.authserver.security.ResourceServerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
@@ -17,54 +17,54 @@ import java.util.List;
 @Service
 public class CustomClientDetailsService extends JdbcClientDetailsService {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CustomClientDetailsService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CustomClientDetailsService.class);
 
-  private String id;
+	private String id;
 
-  private String secretKey;
+	private String secretKey;
 
-  public CustomClientDetailsService(DataSource dataSource) {
-    super(dataSource);
-  }
+	public CustomClientDetailsService(DataSource dataSource) {
+		super(dataSource);
+	}
 
-  public String getId() {
+	public String getId() {
 
-    return this.id;
-  }
+		return this.id;
+	}
 
-  public void setId(String id) {
+	public void setId(String id) {
 
-    this.id = id;
-  }
+		this.id = id;
+	}
 
-  public String getSecretKey() {
+	public String getSecretKey() {
 
-    return this.secretKey;
-  }
+		return this.secretKey;
+	}
 
-  public void setSecretKey(String secretKey) {
+	public void setSecretKey(String secretKey) {
 
-    this.secretKey = secretKey;
-  }
+		this.secretKey = secretKey;
+	}
 
-  @Override
-  public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
+	@Override
+	public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
 
-    LOG.debug("ID {}", clientId);
+		LOG.debug("ID {}", clientId);
 
-    List<String> authorizedGrantTypes = new ArrayList<String>();
-    //authorizedGrantTypes.add("password");
-    //authorizedGrantTypes.add("refresh_token");
-    //authorizedGrantTypes.add("client_credentials");
-    //authorizedGrantTypes.add("authorization_code");
-    //authorizedGrantTypes.add("implicit");
+		List<String> authorizedGrantTypes = new ArrayList<String>();
+		authorizedGrantTypes.add("password");
+		authorizedGrantTypes.add("refresh_token");
+		authorizedGrantTypes.add("client_credentials");
+		authorizedGrantTypes.add("authorization_code");
+		authorizedGrantTypes.add("implicit");
 
-    BaseClientDetails clientDetails = new BaseClientDetails();
-    clientDetails.setClientId(this.id);
-    clientDetails.setClientSecret(this.secretKey);
-    clientDetails.setAuthorizedGrantTypes(authorizedGrantTypes);
-    clientDetails.setResourceIds(Arrays.asList(ResourceServerConfig.RESOURCE_ID));
+		BaseClientDetails clientDetails = new BaseClientDetails();
+		clientDetails.setClientId(this.id);
+		clientDetails.setClientSecret(this.secretKey);
+		clientDetails.setAuthorizedGrantTypes(authorizedGrantTypes);
+		clientDetails.setResourceIds(Arrays.asList("resource_id"));
 
-    return clientDetails;
-  }
+		return clientDetails;
+	}
 }

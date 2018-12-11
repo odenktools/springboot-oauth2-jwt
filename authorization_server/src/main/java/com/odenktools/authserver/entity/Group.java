@@ -30,73 +30,73 @@ import java.util.Set;
 @ToString
 @Entity(name = "Group")
 @Table(name = "groups",
-    uniqueConstraints = {@UniqueConstraint(columnNames = {"named", "coded"})})
+		uniqueConstraints = {@UniqueConstraint(columnNames = {"named", "coded"})})
 public class Group implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id", nullable = false)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
+	private Long id;
 
-  @Column(name = "named", nullable = false)
-  private String named;
+	@Column(name = "named", nullable = false)
+	private String named;
 
-  /**
-   * Alias untuk kolum ``named``. ini digunakan agar data tetap konstant, tidak berpengaruh oleh update.
-   * Ini harus digenerate ``UNIQUE`` berdasarkan kolum ``named``.
-   * Misalkan :
-   * named = Admin Mobile
-   * coded = ROLE_ADMIN_MOBILE (UPPERCASE, hapus SPACE menjadi UNDERSCORES, Tambahkan ROLE_)
-   * </p>
-   */
-  @Column(name = "coded", nullable = false, updatable = false)
-  private String coded;
+	/**
+	 * Alias untuk kolum ``named``. ini digunakan agar data tetap konstant, tidak berpengaruh oleh update.
+	 * Ini harus digenerate ``UNIQUE`` berdasarkan kolum ``named``.
+	 * Misalkan :
+	 * named = Admin Mobile
+	 * coded = ROLE_ADMIN_MOBILE (UPPERCASE, hapus SPACE menjadi UNDERSCORES, Tambahkan ROLE_)
+	 * </p>
+	 */
+	@Column(name = "coded", nullable = false, updatable = false)
+	private String coded;
 
-  @Column(name = "named_description")
-  private String namedDescription;
+	@Column(name = "named_description")
+	private String namedDescription;
 
-  @Column(name = "is_active", nullable = false)
-  private int isActive;
+	@Column(name = "is_active", nullable = false)
+	private int isActive;
 
-  /**
-   * Permission for Customers (Not For Admin)
-   */
-  @ManyToMany(fetch = FetchType.EAGER, cascade = {
-      CascadeType.PERSIST,
-      CascadeType.MERGE
-  })
-  @JoinTable(name = "permissions_rel",
-      joinColumns = @JoinColumn(name = "role_id"),
-      inverseJoinColumns = @JoinColumn(name = "perm_id")
-  )
-  private Set<Permission> usersPermissions;
+	/**
+	 * Permission for Customers (Not For Admin)
+	 */
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {
+			CascadeType.PERSIST,
+			CascadeType.MERGE
+	})
+	@JoinTable(name = "permissions_rel",
+			joinColumns = @JoinColumn(name = "role_id"),
+			inverseJoinColumns = @JoinColumn(name = "perm_id")
+	)
+	private Set<Permission> usersPermissions;
 
-  @ManyToMany(mappedBy = "usersGroups")
-  private Set<Customer> users;
+	@ManyToMany(mappedBy = "usersGroups")
+	private Set<Customer> users;
 
-  public void customAddPermission(Permission usersPermissions) {
+	public void customAddPermission(Permission usersPermissions) {
 
-    this.usersPermissions.add(usersPermissions);
-    usersPermissions.getUsersGroups().add(this);
-  }
+		this.usersPermissions.add(usersPermissions);
+		usersPermissions.getUsersGroups().add(this);
+	}
 
-  public void customRemovePermission(Permission usersPermissions) {
+	public void customRemovePermission(Permission usersPermissions) {
 
-    this.usersPermissions.remove(usersPermissions);
-    usersPermissions.getUsersGroups().remove(this);
-  }
+		this.usersPermissions.remove(usersPermissions);
+		usersPermissions.getUsersGroups().remove(this);
+	}
 
-  public void customAddUsers(Customer user) {
+	public void customAddUsers(Customer user) {
 
-    this.users.add(user);
-    user.getUsersGroups().add(this);
-  }
+		this.users.add(user);
+		user.getUsersGroups().add(this);
+	}
 
-  public void customRemoveUsers(Customer user) {
+	public void customRemoveUsers(Customer user) {
 
-    this.users.remove(user);
-    user.getUsersGroups().remove(this);
-  }
+		this.users.remove(user);
+		user.getUsersGroups().remove(this);
+	}
 }

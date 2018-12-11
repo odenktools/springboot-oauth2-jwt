@@ -42,99 +42,99 @@ import java.util.Set;
 @Entity(name = "Customer")
 @Table(name = "customers")
 @JsonIgnoreProperties(
-    ignoreUnknown = true,
-    value = {"createdAt", "updatedAt"},
-    allowGetters = true
+		ignoreUnknown = true,
+		value = {"createdAt", "updatedAt"},
+		allowGetters = true
 )
 @SuppressWarnings("unused")
 public class Customer implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id_users", nullable = false)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_users", nullable = false)
+	private Long id;
 
-  @NotBlank
-  @NotNull
-  @Size(min = 2, max = 100)
-  @Column(name = "username", unique = true, nullable = false)
-  private String username;
+	@NotBlank
+	@NotNull
+	@Size(min = 2, max = 100)
+	@Column(name = "username", unique = true, nullable = false)
+	private String username;
 
-  @NotBlank
-  @NotNull
-  @Size(min = 2, max = 255)
-  @Column(name = "email", unique = true, nullable = false)
-  private String email;
+	@NotBlank
+	@NotNull
+	@Size(min = 2, max = 255)
+	@Column(name = "email", unique = true, nullable = false)
+	private String email;
 
-  @NotBlank
-  @NotNull
-  @Size(max = 255)
-  @Column(name = "phone_number", unique = true, nullable = false)
-  private String phoneNumber;
+	@NotBlank
+	@NotNull
+	@Size(max = 255)
+	@Column(name = "phone_number", unique = true, nullable = false)
+	private String phoneNumber;
 
-  @NotBlank
-  @NotNull
-  @Size(max = 255)
-  @Column(name = "password", unique = true, nullable = false)
-  private String password;
+	@NotBlank
+	@NotNull
+	@Size(max = 255)
+	@Column(name = "password", unique = true, nullable = false)
+	private String password;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "created_at", updatable = false)
-  private Date createdAt;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created_at", updatable = false)
+	private Date createdAt;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "updated_at")
-  private Date updatedAt;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "updated_at")
+	private Date updatedAt;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "last_login")
-  private Date lastLogin;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "last_login")
+	private Date lastLogin;
 
-  @Column(name = "is_active", columnDefinition = "default int 0")
-  @JsonProperty("is_active")
-  private int isActive;
+	@Column(name = "is_active", columnDefinition = "default int 0")
+	@JsonProperty("is_active")
+	private int isActive;
 
-  @Column(name = "is_verified", columnDefinition = "default int 0")
-  @JsonProperty("is_verified")
-  private int isVerified;
+	@Column(name = "is_verified", columnDefinition = "default int 0")
+	@JsonProperty("is_verified")
+	private int isVerified;
 
-  @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(name = "customers_groups_rel",
-      joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "group_id")
-  )
-  private Set<Group> usersGroups;
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "customers_groups_rel",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "group_id")
+	)
+	private Set<Group> usersGroups;
 
-  /**
-   * Sets created_at before insert.
-   */
-  @PrePersist
-  public void setCreationDate() {
+	/**
+	 * Sets created_at before insert.
+	 */
+	@PrePersist
+	public void setCreationDate() {
 
-    this.createdAt = new Date();
-  }
+		this.createdAt = new Date();
+	}
 
-  /**
-   * Sets updated_at before update.
-   */
-  @PreUpdate
-  public void setChangedDate() {
+	/**
+	 * Sets updated_at before update.
+	 */
+	@PreUpdate
+	public void setChangedDate() {
 
-    this.updatedAt = new Date();
-  }
+		this.updatedAt = new Date();
+	}
 
-  public void customAddGroups(Group group) {
+	public void customAddGroups(Group group) {
 
-    this.usersGroups.add(group);
-    group.getUsers().add(this);
-  }
+		this.usersGroups.add(group);
+		group.getUsers().add(this);
+	}
 
-  public void customRemoveGroups(Group group) {
+	public void customRemoveGroups(Group group) {
 
-    this.usersGroups.remove(usersGroups);
-    group.getUsers().remove(this);
-  }
+		this.usersGroups.remove(usersGroups);
+		group.getUsers().remove(this);
+	}
 }
 
