@@ -1,5 +1,6 @@
 package com.odenktools.authserver.security;
 
+import com.odenktools.authserver.security.user.CustomClientDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -22,6 +23,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
@@ -58,9 +60,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Qualifier("authenticationManagerBean")
 	private AuthenticationManager authenticationManager;
 
+	@Autowired
+	@Qualifier("scopeMappingOAuth2RequestFactory")
+	private ScopeMappingOAuth2RequestFactory defaultOAuth2RequestFactory;
+
 	@Bean
 	public TokenStore tokenStore() {
-
 		return new JdbcTokenStore(this.dataSource);
 	}
 
@@ -86,6 +91,33 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	}
 
 	/**
+	 * Oauth2 ClientDetail (Not fully working now), you can disable this feature.
+	 *
+	 * @return ClientDetailsService.
+	 */
+	@Bean
+	public ClientDetailsService clientDetailsService() {
+
+		CustomClientDetailsService client = new CustomClientDetailsService(this.dataSource);
+		client.setPasswordEncoder(this.passwordEncoder());
+		return client;
+	}
+
+	@Override
+	public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
+
+		//Not fully working, you can disable for now.
+		configurer.withClientDetails(this.clientDetailsService());
+		//configurer.jdbc(this.dataSource).passwordEncoder(this.passwordEncoder());
+	}
+
+	/*@Bean
+	public DefaultOAuth2RequestFactory oAuth2RequestFactory() throws Exception {
+		return new ScopeMappingOAuth2RequestFactory(
+				this.clientDetailsService());
+	}*/
+
+	/**
 	 * TokenService.
 	 *
 	 * @return DefaultTokenServices.
@@ -94,7 +126,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public DefaultTokenServices tokenServices() {
 
 		final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-		defaultTokenServices.setTokenStore(tokenStore());
+
+		//Not fully working, you can disable for now.
+		defaultTokenServices.setClientDetailsService(this.clientDetailsService());
+		defaultTokenServices.setAuthenticationManager(this.authenticationManager);
+		defaultTokenServices.setTokenStore(this.tokenStore());
+		defaultTokenServices.setTokenEnhancer(this.tokenEnhancerChain());
 		defaultTokenServices.setSupportRefreshToken(true);
 		return defaultTokenServices;
 	}
@@ -124,18 +161,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				new ClassPathResource("certificate/jwt.p12"),
 				PASS_KEY.toCharArray())
 				.getKeyPair("jwt");
+		//Setup keypair
 		converter.setKeyPair(keyPair);
 		return converter;
-	}
-
-	@Override
-	public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
-
-		//configurer.withClientDetails(clientDetailsService());
-
-		configurer
-				.jdbc(this.dataSource)
-				.passwordEncoder(this.passwordEncoder());
 	}
 
 	/**
@@ -152,19 +180,25 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				.checkTokenAccess("isAuthenticated()");
 	}
 
-	@Override
-	public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-
-		Collection<TokenEnhancer> tokenEnhancers = applicationContext.getBeansOfType(TokenEnhancer.class).values();
+	@Bean
+	public TokenEnhancerChain tokenEnhancerChain() {
+		final Collection<TokenEnhancer> tokenEnhancers =
+				applicationContext.getBeansOfType(TokenEnhancer.class).values();
 		TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
 		tokenEnhancerChain.setTokenEnhancers(new ArrayList<>(tokenEnhancers));
-		
+		return tokenEnhancerChain;
+	}
+
+	@Override
+	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+
 		// @formatter:off
 		endpoints
-				.authenticationManager(authenticationManager)
+				.authenticationManager(this.authenticationManager)
 				.approvalStoreDisabled()
+				.requestFactory(this.defaultOAuth2RequestFactory)
 				.tokenStore(this.tokenStore())
-				.tokenEnhancer(tokenEnhancerChain)
+				.tokenEnhancer(this.tokenEnhancerChain())
 				.accessTokenConverter(this.accessTokenConverter())
 				.authorizationCodeServices(this.authorizationCodeServices());
 		// @formatter:on

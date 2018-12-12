@@ -2,52 +2,27 @@ package com.odenktools.authserver.security.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientRegistrationException;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.sql.SQLException;
 
 @Service
 public class CustomClientDetailsService extends JdbcClientDetailsService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CustomClientDetailsService.class);
 
-	private String id;
-
-	private String secretKey;
-
 	public CustomClientDetailsService(DataSource dataSource) {
 		super(dataSource);
+		try {
+			LOG.debug("DATASOURCE {}", dataSource.getConnection().getCatalog());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public String getId() {
-
-		return this.id;
-	}
-
-	public void setId(String id) {
-
-		this.id = id;
-	}
-
-	public String getSecretKey() {
-
-		return this.secretKey;
-	}
-
-	public void setSecretKey(String secretKey) {
-
-		this.secretKey = secretKey;
-	}
-
-	@Override
+	/*@Override
 	public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
 
 		LOG.debug("ID {}", clientId);
@@ -66,5 +41,5 @@ public class CustomClientDetailsService extends JdbcClientDetailsService {
 		clientDetails.setResourceIds(Arrays.asList("resource_id"));
 
 		return clientDetails;
-	}
+	}*/
 }

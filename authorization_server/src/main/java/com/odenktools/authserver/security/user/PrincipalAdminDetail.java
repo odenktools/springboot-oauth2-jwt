@@ -34,13 +34,12 @@ public class PrincipalAdminDetail implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		for (Group role : this.customer.getUsersGroups()) {
-			LOG.info("GrantedAuthority INFO {}", role.getCoded());
 			// Check role is active?.
 			if (role.getIsActive() == 1) {
 				// Create Customer Authority.
 				authorities.add(new SimpleGrantedAuthority(role.getCoded()));
 				for (Permission rolePerm : role.getUsersPermissions()) {
-					LOG.info("role INFO {}", rolePerm.getNamePermission());
+					LOG.info("ROLE_GRANTED {}", rolePerm.getNamePermission());
 					authorities.add(new SimpleGrantedAuthority(rolePerm.getNamePermission()));
 				}
 			} else {

@@ -32,19 +32,19 @@ RUN set -x \
 
 ARG JAR_FILE
 
-COPY ${JAR_FILE} /usr/local/bin/authserver.jar
+COPY ${JAR_FILE} /usr/local/bin/resourceserver.jar
 
 COPY wait-for-it.sh /usr/bin
 
 RUN chmod +x /usr/bin/wait-for-it.sh
 
-EXPOSE 8090
+EXPOSE 8091
 
 RUN mkdir /applog
 
-RUN mkdir /authorization-server
+RUN mkdir /file-server
 
-VOLUME ["/applog", "/authorization-server"]
+VOLUME ["/applog", "/file-server"]
 
 STOPSIGNAL SIGTERM
 

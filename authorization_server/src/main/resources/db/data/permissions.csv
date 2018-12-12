@@ -15,3 +15,7 @@
 "UPDATE_CUSTOMER","Update Customer"
 "WRITE_CUSTOMER","Write Customer"
 "DELETE_CUSTOMER","Delete Customer"
+"WRITE_FILE_SERVICE","Write File Service"
+"UPDATE_FILE_SERVICE","Update File Service"
+"READ_FILE_SERVICE","Read File Service"
+"DELETE_FILE_SERVICE","Delete File Service"

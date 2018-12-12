@@ -27,7 +27,7 @@
         </loadData>
     </changeSet>
 
-    <changeSet author="Rahyan" id="users-data">
+    <changeSet author="Odenktools" id="users-data">
         <loadData catalogName="customers"
                   encoding="UTF-8"
                   file="db/data/customers.csv"
@@ -44,7 +44,7 @@
         </loadData>
     </changeSet>
 
-    <changeSet author="Rahyan" id="groups-data">
+    <changeSet author="Odenktools" id="groups-data">
         <loadData catalogName="groups"
                   encoding="UTF-8"
                   file="db/data/groups.csv"
@@ -60,7 +60,7 @@
         </loadData>
     </changeSet>
 
-    <changeSet author="Rahyan" id="permissions-data">
+    <changeSet author="Odenktools" id="permissions-data">
         <loadData catalogName="permissions"
                   encoding="UTF-8"
                   file="db/data/permissions.csv"
@@ -73,18 +73,20 @@
         </loadData>
     </changeSet>
 
-    <!--<changeSet author="Rahyan" id="users_groups_rel-data">
-        <loadData catalogName="users_groups_rel"
+    <changeSet author="Rahyan" id="customers_groups_rel-data">
+        <loadData catalogName="customers_groups_rel"
                   encoding="UTF-8"
                   file="db/data/groups_rel.csv"
                   schemaName="public"
                   separator=","
                   quotchar="&quot;"
-                  tableName="users_groups_rel">
+                  tableName="customers_groups_rel">
+            <column name="user_id" type="NUMERIC"/>
+            <column name="group_id" type="NUMERIC"/>
         </loadData>
-    </changeSet>-->
+    </changeSet>
 
-    <changeSet author="Rahyan" id="users_permissions_rel-data">
+    <changeSet author="Odenktools" id="users_permissions_rel-data">
         <loadData catalogName="permissions_rel"
                   encoding="UTF-8"
                   file="db/data/permissions_rel.csv"
@@ -95,6 +97,34 @@
             <column name="role_id" type="NUMERIC"/>
             <column name="perm_id" type="NUMERIC"/>
         </loadData>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="fk_customer_groups_group_id">
+        <addForeignKeyConstraint baseColumnNames="group_id" baseTableName="customers_groups_rel"
+                                 constraintName="fk_customer_groups_group_id" deferrable="false" initiallyDeferred="false"
+                                 onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id"
+                                 referencedTableName="groups"/>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="fk_customer_groups_user_id">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="customers_groups_rel"
+                                 constraintName="fk_customer_groups_user_id" deferrable="false" initiallyDeferred="false"
+                                 onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id_users"
+                                 referencedTableName="customers"/>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="fk_customer_perm_rel_perm_id">
+        <addForeignKeyConstraint baseColumnNames="perm_id" baseTableName="permissions_rel"
+                                 constraintName="fk_user_perm_rel_perm_id" deferrable="false" initiallyDeferred="false"
+                                 onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id_perm"
+                                 referencedTableName="permissions"/>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="fk_customer_perm_rel_role_id">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="permissions_rel"
+                                 constraintName="fk_customer_perm_rel_role_id" deferrable="false" initiallyDeferred="false"
+                                 onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id"
+                                 referencedTableName="groups"/>
     </changeSet>
 
 </databaseChangeLog>

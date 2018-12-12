@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="Odenktools" id="id_seq">
+        <createTable tableName="id_seq">
+            <column autoIncrement="false" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="image_files">
+        <createTable tableName="image_files">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="origin_name" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="short_name" type="VARCHAR(255)"
+                    remarks="URL File">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="file_size" type="FLOAT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_status" type="VARCHAR(25)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_active" defaultValueBoolean="true" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="datetime"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Odenktools" id="hibernate_sequence" dbms="oracle,postgresql">
+        <createSequence sequenceName="hibernate_sequence" startValue="1"/>
+    </changeSet>
+
+</databaseChangeLog>
