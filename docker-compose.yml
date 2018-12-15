@@ -53,6 +53,7 @@ services:
       - SERVICE_NAME=oauth2-authorization-server
       - SPRING_PROFILES_ACTIVE=develop
       - SPRING_DATASOURCE_URL=jdbc:postgresql://pg-auth-server:5432/auth_server
+      - SPRING_DATASOURCE_HIKARI_JDBC_URL=jdbc:postgresql://pg-auth-server:5432/auth_server
       - SPRING_DATASOURCE_USERNAME=odenktools
       - SPRING_DATASOURCE_PASSWORD=test1234
     ports:
