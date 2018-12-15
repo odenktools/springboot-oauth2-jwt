@@ -34,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		Logger.debug("with username {}", username);
+		Logger.debug("loadUserByUsername {}", username);
 
 		Optional<Customer> customer = this.iCustomer.findByUsername(username);
 		if (!customer.isPresent()) {

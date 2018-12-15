@@ -25,6 +25,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
@@ -56,27 +57,25 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	private final static String PASS_KEY = "odenktools123";
 
-	@Autowired
 	@Qualifier("authenticationManagerBean")
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
-	@Qualifier("scopeMappingOAuth2RequestFactory")
-	private ScopeMappingOAuth2RequestFactory defaultOAuth2RequestFactory;
-
-	@Bean
-	public TokenStore tokenStore() {
-		return new JdbcTokenStore(this.dataSource);
-	}
-
-	public AuthorizationServerConfig(DataSource dataSource) {
+	public AuthorizationServerConfig(DataSource dataSource,
+									 AuthenticationManager authenticationManager) {
 
 		this.dataSource = dataSource;
+		this.authenticationManager = authenticationManager;
 	}
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
+	}
+
+	@Bean
+	public TokenStore tokenStore() {
+		return new JdbcTokenStore(this.dataSource);
 	}
 
 	/**
@@ -111,11 +110,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		//configurer.jdbc(this.dataSource).passwordEncoder(this.passwordEncoder());
 	}
 
-	/*@Bean
+	@Bean
 	public DefaultOAuth2RequestFactory oAuth2RequestFactory() throws Exception {
 		return new ScopeMappingOAuth2RequestFactory(
 				this.clientDetailsService());
-	}*/
+	}
 
 	/**
 	 * TokenService.
@@ -196,8 +195,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		endpoints
 				.authenticationManager(this.authenticationManager)
 				.approvalStoreDisabled()
-				.requestFactory(this.defaultOAuth2RequestFactory)
 				.tokenStore(this.tokenStore())
+				.requestFactory(this.oAuth2RequestFactory())
 				.tokenEnhancer(this.tokenEnhancerChain())
 				.accessTokenConverter(this.accessTokenConverter())
 				.authorizationCodeServices(this.authorizationCodeServices());
@@ -218,31 +217,4 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 		LOG.debug("LOGIN FAILED [CRED = {}] [PRINCIPAL = {}] ", auth.getCredentials(), auth.getPrincipal());
 	}
-
-  /*class CustomOauth2RequestFactory extends DefaultOAuth2RequestFactory {
-    @Autowired
-    private TokenStore tokenStore;
-
-    public CustomOauth2RequestFactory(ClientDetailsService clientDetailsService) {
-      super(clientDetailsService);
-    }
-
-    @Override
-    public TokenRequest createTokenRequest(Map<String, String> requestParameters,
-                                           ClientDetails authenticatedClient) {
-      if (requestParameters.get("grant_type").equals("refresh_token")) {
-        OAuth2Authentication authentication = tokenStore.readAuthenticationForRefreshToken(
-            tokenStore.readRefreshToken(requestParameters.get("refresh_token")));
-        SecurityContextHolder.getContext()
-            .setAuthentication(new UsernamePasswordAuthenticationToken(authentication.getName(), null,
-                userDetailsService.loadUserByUsername(authentication.getName()).getAuthorities()));
-      }
-      return super.createTokenRequest(requestParameters, authenticatedClient);
-    }
-  }*/
-
-	/*@EnableResourceServer
-	public static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
-
-	}*/
 }

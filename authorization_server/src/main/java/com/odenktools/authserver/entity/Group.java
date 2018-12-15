@@ -1,25 +1,14 @@
 package com.odenktools.authserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import jdk.nashorn.internal.ir.annotations.Immutable;
+import lombok.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -54,11 +43,79 @@ public class Group implements Serializable {
 	@Column(name = "coded", nullable = false, updatable = false)
 	private String coded;
 
-	@Column(name = "named_description")
+	@Column(name = "named_description", nullable = false)
 	private String namedDescription;
 
 	@Column(name = "is_active", nullable = false)
 	private int isActive;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created_at", updatable = false)
+	@JsonProperty("created_at")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+	private Date createdAt;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+	@Column(name = "updated_at")
+	private Date updatedAt;
+
+	public Group(
+			Long id,
+			String named,
+			String coded,
+			String namedDescription,
+			int isActive) {
+		this.id = id;
+		this.named = named;
+		this.coded = coded;
+		this.namedDescription = namedDescription;
+		this.isActive = isActive;
+	}
+
+	public Group(
+			String named,
+			String coded,
+			String namedDescription,
+			int isActive) {
+		this.named = named;
+		this.coded = coded;
+		this.namedDescription = namedDescription;
+		this.isActive = isActive;
+	}
+
+	public Group(
+			String named,
+			String coded,
+			String namedDescription,
+			int isActive,
+			Set<Permission> usersPermissions,
+			Set<Customer> users) {
+		this.named = named;
+		this.coded = coded;
+		this.namedDescription = namedDescription;
+		this.isActive = isActive;
+		this.usersPermissions = usersPermissions;
+		this.users = users;
+	}
+
+	/**
+	 * Sets created_at before insert.
+	 */
+	@PrePersist
+	public void setCreationDate() {
+
+		this.createdAt = new Date();
+	}
+
+	/**
+	 * Sets updated_at before update.
+	 */
+	@PreUpdate
+	public void setChangedDate() {
+
+		this.updatedAt = new Date();
+	}
 
 	/**
 	 * Permission for Customers (Not For Admin)

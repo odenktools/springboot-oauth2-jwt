@@ -1,23 +1,15 @@
 package com.odenktools.authserver.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -27,9 +19,16 @@ import java.util.Set;
 @Getter
 @Setter
 @JsonSerialize
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "Permission")
 @Table(name = "permissions",
 		uniqueConstraints = {@UniqueConstraint(columnNames = {"name_permission", "readable_name"})})
+@JsonIgnoreProperties(
+		ignoreUnknown = true,
+		value = {"createdAt", "updatedAt"},
+		allowGetters = true
+)
 public class Permission implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -70,10 +69,6 @@ public class Permission implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
 	@Column(name = "deleted_at")
 	private Date deletedAt;
-
-	public Permission() {
-
-	}
 
 	public Permission(@NotNull @Size(max = 100) String namePermission,
 					  @NotNull @Size(max = 100) String readableName) {

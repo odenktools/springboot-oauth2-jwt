@@ -2,13 +2,19 @@ spring:
   main:
     banner-mode: console
   datasource:
-    hikari:
-      minimum-idle: 1
-      maximum-pool-size: 5
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://pg-auth-server:5432/auth_server
     username: ${POSTGRESQL_USERNAME:postgres}
     password: ${POSTGRESQL_PASSWORD:odenktools}
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idleTimeout: 30000
+      maxLifetime: 2000000
+      connectionTimeout: 30000
+      poolName: OdenktoolsJPAAuthServerHikariCP
+      jdbc-url: jdbc:postgresql://localhost:5432/auth_server
+      driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
     hibernate:
@@ -37,11 +43,12 @@ logging:
   file: ${logging.path}/log.log
   level:
     ROOT: INFO
-    com.odenktools.databoot: INFO
-    org.hibernate.SQL: error
-    org.hibernate.type.descriptor.sql.BasicBinder: error
-    org.springframework.web: warn
-    org.springframework.boot: warn
+    com.odenktools: INFO
+    org.hibernate.SQL: ERROR
+    org.hibernate.type.descriptor.sql.BasicBinder: ERROR
+    org.springframework.web: WARN
+    org.springframework.boot: WARN
+    org.springframework.security: WARN
 # Resource Properties
 resources:
   add-mappings: false

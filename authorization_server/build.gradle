@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.5.RELEASE'
+        springBootVersion = '2.0.7.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -30,7 +30,17 @@ repositories {
     maven { url "https://repo.spring.io/milestone" }
 }
 
-ext['springCloudVersion'] = 'Finchley.RELEASE'
+ext['springCloudVersion'] = 'Finchley.SR2'
+
+allprojects {
+    apply plugin: 'idea'
+    idea {
+        module {
+            outputDir file('build/classes/java/main')
+            testOutputDir file('build/classes/java/test')
+        }
+    }
+}
 
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter')
@@ -39,9 +49,9 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
     implementation('org.springframework.boot:spring-boot-starter-security')
     implementation('org.springframework.security.oauth:spring-security-oauth2')
-    implementation('org.springframework.security:spring-security-jwt')
     implementation('org.springframework.cloud:spring-cloud-starter-oauth2')
     implementation('org.springframework.cloud:spring-cloud-starter-security')
+    implementation('com.zaxxer:HikariCP:3.1.0')
     implementation('org.apache.commons:commons-lang3:3.8.1')
     implementation('org.modelmapper:modelmapper:2.0.0')
     implementation('org.modelmapper.extensions:modelmapper-spring:2.0.0')

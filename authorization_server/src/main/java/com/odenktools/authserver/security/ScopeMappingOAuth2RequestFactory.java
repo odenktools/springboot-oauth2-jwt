@@ -21,6 +21,11 @@ public class ScopeMappingOAuth2RequestFactory extends DefaultOAuth2RequestFactor
 	}
 
 	@Override
+	public void setCheckUserScopes(boolean checkUserScopes) {
+		super.setCheckUserScopes(checkUserScopes);
+	}
+
+	@Override
 	public TokenRequest createTokenRequest(Map<String, String> requestParameters, ClientDetails authenticatedClient) {
 		TokenRequest tokenRequest = super.createTokenRequest(requestParameters, authenticatedClient);
 		if (requestParameters.get("grant_type").equals("refresh_token")) {

@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.5.RELEASE'
+        springBootVersion = '2.0.7.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -30,7 +30,17 @@ repositories {
     maven { url "https://repo.spring.io/milestone" }
 }
 
-ext['springCloudVersion'] = 'Finchley.RELEASE'
+ext['springCloudVersion'] = 'Finchley.SR2'
+
+allprojects {
+    apply plugin: 'idea'
+    idea {
+        module {
+            outputDir file('build/classes/java/main')
+            testOutputDir file('build/classes/java/test')
+        }
+    }
+}
 
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter')
