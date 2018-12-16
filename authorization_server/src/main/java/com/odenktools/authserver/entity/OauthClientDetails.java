@@ -30,15 +30,14 @@ public class OauthClientDetails implements ClientDetails, Serializable {
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	@Id
-	@Column(nullable = false, unique = true)
+	@Column(name = "client_id", nullable = false, unique = true)
 	private String clientId;
 
-	@Column(name = "client_secret", nullable = false)
+	@Column(name = "client_secret", nullable = false, unique = true)
 	private String clientSecret;
 
 	@Column(name = "resource_ids")
 	private String resourceIds;
-
 
 	@Column(name = "scope")
 	private String scope;
@@ -63,6 +62,10 @@ public class OauthClientDetails implements ClientDetails, Serializable {
 
 	@Column
 	private String additionalInformation;
+
+	private Set<String> getAutoApproveScope() {
+		return StringUtils.commaDelimitedListToSet(this.autoApproveScope);
+	}
 
 	@Override
 	public String getClientId() {
@@ -133,7 +136,19 @@ public class OauthClientDetails implements ClientDetails, Serializable {
 
 	@Override
 	public boolean isAutoApprove(String scope) {
-		return this.getAutoApproveScope().contains(scope);
+		if (this.autoApproveScope == null) {
+			return false;
+		} else {
+			Iterator scopeIterator = this.getAutoApproveScope().iterator();
+			String auto;
+			do {
+				if (!scopeIterator.hasNext()) {
+					return false;
+				}
+				auto = (String) scopeIterator.next();
+			} while (!auto.equals("true") && !scope.matches(auto));
+			return true;
+		}
 	}
 
 	@Override
@@ -144,10 +159,6 @@ public class OauthClientDetails implements ClientDetails, Serializable {
 		} catch (IOException e) {
 			return new HashMap<>();
 		}
-	}
-
-	public Set<String> getAutoApproveScope() {
-		return StringUtils.commaDelimitedListToSet(this.autoApproveScope);
 	}
 
 	public void setClientId(String clientId) {

@@ -25,6 +25,13 @@ public class GroupServiceImpl implements GroupService {
 
 	@Override
 	@Transactional
+	public Optional<Group> findById(Long id) {
+		Optional<Group> groupOptional = this.iGroup.findById(id);
+		return groupOptional;
+	}
+
+	@Override
+	@Transactional
 	public void createGroup(GroupDto request) {
 
 		Group group = new Group(request.getNamed(),
@@ -56,6 +63,20 @@ public class GroupServiceImpl implements GroupService {
 			group.setIsActive(request.getIsActive());
 			//update it to database
 			this.iGroup.save(group);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	@Transactional
+	public Boolean removeGroup(GroupDto request) {
+
+		Optional<Group> groupOptional = this.iGroup.findById(request.getId());
+		if (groupOptional.isPresent()) {
+			Group group = groupOptional.get();
+			//delete from database
+			this.iGroup.deleteById(group.getId());
 			return true;
 		}
 		return false;

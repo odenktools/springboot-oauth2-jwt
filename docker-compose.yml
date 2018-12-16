@@ -46,7 +46,7 @@ services:
     networks: ['default']
 
   oauth2-authorization-server:
-    image: odenktools/oauth2-authorization-server:0.1.0
+    image: odenktools/oauth2-authorization-server:latest
     container_name: oauth2-authorization-server
     environment:
       - TZ=Asia/Jakarta
@@ -67,7 +67,7 @@ services:
       java ${JAVA_ARGS} -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC -Djava.security.egd=file:/dev/./urandom -jar /usr/local/bin/authserver.jar'
 
   oauth2-resource-server:
-    image: odenktools/oauth2-resource-server:0.1.0
+    image: odenktools/oauth2-resource-server:latest
     container_name: oauth2-resource-server
     environment:
       - TZ=Asia/Jakarta

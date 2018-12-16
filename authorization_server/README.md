@@ -9,9 +9,21 @@ gradle bootRun
 
 #### Running as a Packaged Application
 
+Build Jar
+
 ```bash
 gradle build -x test
+```
 
+Or Build Jar without test
+
+```bash
+gradle build -x test
+```
+
+Execute Jar Package
+
+```bash
 java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8090,suspend=n -jar build/libs/authserver-0.1.0.jar
 ```
 
@@ -20,6 +32,8 @@ java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8090,suspend=n -jar 
 ```bash
 docker build --tag odenktools/oauth2-authorization-server:0.1.0 --build-arg JAR_FILE=build/libs/authserver-0.1.0.jar .
 docker push odenktools/oauth2-authorization-server:0.1.0
+docker tag odenktools/oauth2-authorization-server:0.1.0 odenktools/oauth2-authorization-server:latest
+docker push odenktools/oauth2-authorization-server:latest
 ```
 
 # LICENSE

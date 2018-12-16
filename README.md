@@ -1,21 +1,23 @@
 Springboot 2.0.x oauth2 JWT
 ============================
 
-Sample Spring Boot 2.0.x OAuth2 JWT Authorization Server (JPA, Hibernate, PostgreSQL, Dockerize).
+Sample Spring Boot 2.0.x OAuth2 JWT Authorization Server **(JWT, JPA, Hibernate, PostgreSQL, Dockerize)**.
 
 You can use this project to boostraping Authorization your own Application.
 
-If you feel happy **give a star** to this repository.
+If you feel happy **Give me a STAR** to this **repository**.
 
 ## Features
 
 * OAuth2.0 Authorization Server
 * OAuth2.0 Resource Server
+* We use [PostgreSQL](https://www.postgresql.org/)
 * We use [Liquibase](https://www.liquibase.org/)
 * We use [Gradle 4.10.2](https://gradle.org/install/)
-* We use Docker, to simplify understanding application flow.
-* We use JWT Token RSA, production ready.
+* We use [Docker](https://docs.docker.com/install/), to simplify understanding application flow.
+* We use [JWT](https://jwt.io/) Token RSA, production ready.
 * File upload API (Using Oauth2 Resource Server)
+* How to use Validation.
 
 ## Oauth2 user credential
 
@@ -37,8 +39,12 @@ If you feel happy **give a star** to this repository.
 
 For running on Docker instance, it's really simple.
 
-* Clone this repo
-* Run ```docker-compose up -d```
+* Clone this repository.
+* ```bash cd springboot-oauth2-jwt```
+* ```bash docker network create odenktools-net```
+* Run ```bash docker-compose up -d```
+* make a cup of coffee...
+* You're done! application ready to test.
 
 ## Testing Apps
 
@@ -156,7 +162,7 @@ curl --request POST \
   --header 'Authorization: Bearer {{YOUR_ACCESS_TOKEN}}' \
   --header 'Content-Type: application/x-www-form-urlencoded' \
   --header 'content-type: multipart/form-data' \
-  --form 'file=@/opt/pictures/your-images.jpg'
+  --form 'file=@/opt/pictures/{{IMAGE_WANT_TO_UPLOAD}}.jpg'
 ```
 
 ## Build Application from source
@@ -165,14 +171,14 @@ First clone this repo. To build the sources you need to have [Gradle 4x](https:/
 
 After the clone, create database
 
-- For **Authorization Server**
+- **Authorization Server**
 
 ```bash
 su - postgres
 createdb auth_server
 ```
 
-- For **Resource Server**
+- **Resource Server**
 
 ```bash
 su - postgres
@@ -181,14 +187,14 @@ createdb file_server
 
 After **create database**, build the entire project.
 
-For **Authorization Server**
+- **Authorization Server**
 
 ```bash
 cd authorization_server
 gradle build
 ```
 
-For **Resource Server**
+- **Resource Server**
 
 ```bash
 cd resource_server
@@ -201,9 +207,13 @@ gradle build
 keytool -genkey -alias jwt -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore jwt.p12 -keypass odenktools123 -validity 3650
 ```
 
+paste to ```main/resources/certificate``` folder
+
 ```bash
 keytool -list -rfc --keystore jwt.p12 | openssl x509 -inform pem -pubkey
 ```
+
+paste to ```main/resources/certificate``` folder
 
 ## Todo List
 
@@ -215,17 +225,19 @@ keytool -list -rfc --keystore jwt.p12 | openssl x509 -inform pem -pubkey
 
 ## References
 
-[Official Oauth2 Sample Code](https://oauth.net/code/)
+[Official - Oauth2 Sample Code](https://oauth.net/code/)
+
+[Official - Spring Oauth2 Docs](https://projects.spring.io/spring-security-oauth/docs/oauth2.html)
+
+[Official - Spring Oauth2 ref](https://docs.spring.io/spring-security-oauth2-boot/docs/current/reference/html5/)
+
+[Official - Spring Oauth2 Tutorial](https://spring.io/guides/tutorials/spring-boot-oauth2/)
 
 [Oauth Playground](https://developers.google.com/oauthplayground/)
 
-[Spring Oauth2 Docs](https://projects.spring.io/spring-security-oauth/docs/oauth2.html)
+[Dzone - Build a Spring Boot App With Secure Server-to-Server Communication via OAuth 2.0](https://dzone.com/articles/build-a-spring-boot-app-with-secure-server-to-serv)
 
-[Secure Server To Server](https://dzone.com/articles/build-a-spring-boot-app-with-secure-server-to-serv)
-
-[Tutorial Oauth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
-
-[Okta](https://developer.okta.com/blog/2018/04/02/client-creds-with-spring-boot)
+[Okta - Secure Server-to-Server Communication with Spring Boot and OAuth 2.0](https://developer.okta.com/blog/2018/04/02/client-creds-with-spring-boot)
 
 # LICENSE
 

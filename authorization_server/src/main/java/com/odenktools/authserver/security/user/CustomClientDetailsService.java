@@ -23,6 +23,9 @@ public class CustomClientDetailsService extends JdbcClientDetailsService {
 
 	private static final Logger Logger = LoggerFactory.getLogger(CustomClientDetailsService.class);
 
+	/**
+	 * Ignore Autowired in here.
+	 */
 	@Autowired
 	private IOauthClientDetails iOauthClientDetails;
 
@@ -40,6 +43,10 @@ public class CustomClientDetailsService extends JdbcClientDetailsService {
 		}
 
 		OauthClientDetails client = oauthClientDetails.get();
+
+		/*client.setAuthorizedGrantTypes(new HashSet<>(Arrays.asList("password", "authorization_code",
+				"refresh_token", "implicit")));
+		client.setScope(new HashSet<>(Arrays.asList("scope_read", "scope_write", "trust")));*/
 
 		String resourceIds = client.getResourceIds().stream().collect(Collectors.joining(","));
 		String scopes = client.getScope().stream().collect(Collectors.joining(","));
