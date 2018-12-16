@@ -6,6 +6,9 @@ import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeSe
 
 import javax.sql.DataSource;
 
+/**
+ * @author Odenktools
+ */
 public class CustomJdbcAuthorizationCodeServices extends JdbcAuthorizationCodeServices {
 
 	private RandomValueStringGenerator generator;

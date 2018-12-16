@@ -52,6 +52,7 @@ dependencies {
     implementation('org.springframework.cloud:spring-cloud-starter-oauth2')
     implementation('org.springframework.cloud:spring-cloud-starter-security')
     implementation('com.zaxxer:HikariCP:3.1.0')
+    implementation('org.apache.commons:commons-collections4:4.2')
     implementation('org.apache.commons:commons-lang3:3.8.1')
     implementation('org.modelmapper:modelmapper:2.0.0')
     implementation('org.modelmapper.extensions:modelmapper-spring:2.0.0')

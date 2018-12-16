@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * @author Odenktools
+ */
 @Component
 public class CustomAccessTokenConverter extends DefaultAccessTokenConverter {
 

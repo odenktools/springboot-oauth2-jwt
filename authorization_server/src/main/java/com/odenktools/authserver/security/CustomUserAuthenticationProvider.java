@@ -9,6 +9,9 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Odenktools
+ */
 public class CustomUserAuthenticationProvider implements AuthenticationProvider {
 
 	@Override

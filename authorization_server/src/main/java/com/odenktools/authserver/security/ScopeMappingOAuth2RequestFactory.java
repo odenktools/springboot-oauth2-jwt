@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+/**
+ * @author Odenktools
+ */
 @Component
 public class ScopeMappingOAuth2RequestFactory extends DefaultOAuth2RequestFactory {
 

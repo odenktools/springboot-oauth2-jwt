@@ -4,13 +4,14 @@ import com.odenktools.authserver.dto.group.GroupDto;
 import com.odenktools.authserver.entity.Group;
 import com.odenktools.authserver.repository.IGroup;
 import com.odenktools.authserver.service.GroupService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * @author Odenktools.
+ */
 @Service
 public class GroupServiceImpl implements GroupService {
 

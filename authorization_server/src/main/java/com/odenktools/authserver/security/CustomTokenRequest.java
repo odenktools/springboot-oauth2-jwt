@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author Odenktools
+ */
 public class CustomTokenRequest extends TokenRequest {
 
 	private String grantType;

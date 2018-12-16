@@ -36,7 +36,7 @@ public class GroupDto {
 	@NotEmpty(message = "namedDescription cannot empty")
 	private String namedDescription;
 
-	private int isActive = 0;
+	private int isActive;
 
 	/**
 	 * Permission for Customers (Not For Admin)

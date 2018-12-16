@@ -14,7 +14,9 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * Handling Permission for END USER (Customer)
+ * Handling Permission for END USER (Customer).
+ *
+ * @author Odenktools.
  */
 @Getter
 @Setter

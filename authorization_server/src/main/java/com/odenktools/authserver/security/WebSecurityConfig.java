@@ -14,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author Odenktools
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
