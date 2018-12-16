@@ -3,19 +3,37 @@ Springboot 2.0.x oauth2 JWT
 
 Sample Spring Boot 2.0.x OAuth2 JWT Authorization Server (JPA, Hibernate, PostgreSQL, Dockerize).
 
-If you feel happy give a star to this repository.
+You can use this project to boostraping Authorization your own Application.
+
+If you feel happy **give a star** to this repository.
 
 ## Features
 
 * OAuth2.0 Authorization Server
 * OAuth2.0 Resource Server
-* [Liquibase](https://www.liquibase.org/)
-* [Gradle 4.10.2](https://gradle.org/install/)
-* Docker
-* JWT Token RSA
-* Sample File Upload (Using Oauth2 Resource Server)
+* We use [Liquibase](https://www.liquibase.org/)
+* We use [Gradle 4.10.2](https://gradle.org/install/)
+* We use Docker, to simplify understanding application flow.
+* We use JWT Token RSA, production ready.
+* File upload API (Using Oauth2 Resource Server)
 
-## Running On Docker
+## Oauth2 user credential
+
+| User            | Password        | authorized grant types                             |
+|-----------------|-----------------|--------------------------------------------------- |
+| server-server   | server-server   | client_credentials                                 |
+| external-server | external-server | client_credentials                                 |
+| android-client  | android-client  | password,refresh_token,implicit,authorization_code |
+
+## Customer credential
+
+| User            | Password        |
+|-----------------|-----------------|
+| customer_one    | customer_one    |
+| customer_two    | customer_two    |
+| customer_bad    | customer_bad    |
+
+## How to Running On Docker
 
 For running on Docker instance, it's really simple.
 
@@ -24,7 +42,7 @@ For running on Docker instance, it's really simple.
 
 ## Testing Apps
 
-Login server-server
+**server-server login**
 
 ```bash
 curl --request POST \
@@ -46,7 +64,7 @@ the result will be like
 }
 ```
 
-Login customer (end user for your apps)
+**Customer Login (end user for your apps)**
 
 ```bash
 curl --request POST \
@@ -69,7 +87,7 @@ the result will be like
 }
 ```
 
-Customer Check Oauth2 Token
+**Customer Check Oauth2 Token**
 
 ```bash
 curl --request POST \
@@ -105,7 +123,7 @@ the result will be like
 }
 ```
 
-Customer Refresh Oauth2 Token
+**Customer Refresh Oauth2 Token**
 
 ```bash
 curl --request POST \
@@ -114,7 +132,7 @@ curl --request POST \
   --data 'grant_type=refresh_token&token={{YOUR_ACCESS_TOKEN}}&refresh_token={{YOUR_REFRESH_TOKEN}}'
 ```
 
-Access Customer Profile
+**Access Customer Profile**
 
 ```bash
 curl --request GET \
@@ -130,7 +148,7 @@ the result will be like
 }
 ```
 
-File Upload
+**File Upload**
 
 ```bash
 curl --request POST \
@@ -147,37 +165,37 @@ First clone this repo. To build the sources you need to have [Gradle 4x](https:/
 
 After the clone, create database
 
-- For Authorization Server
+- For **Authorization Server**
 
 ```bash
 su - postgres
 createdb auth_server
 ```
 
-- For Resource Server
+- For **Resource Server**
 
 ```bash
 su - postgres
 createdb file_server
 ```
 
-After create database, build the entire project.
+After **create database**, build the entire project.
 
-For Authorization Server
+For **Authorization Server**
 
 ```bash
 cd authorization_server
 gradle build
 ```
 
-For Resource Server
+For **Resource Server**
 
 ```bash
 cd resource_server
 gradle build
 ```
 
-Generate RSA KeyStore
+**Generate RSA KeyStore**
 
 ```bash
 keytool -genkey -alias jwt -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore jwt.p12 -keypass odenktools123 -validity 3650
@@ -187,30 +205,13 @@ keytool -genkey -alias jwt -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore
 keytool -list -rfc --keystore jwt.p12 | openssl x509 -inform pem -pubkey
 ```
 
-## Oauth2 user credential
+## Todo List
 
-User : server-server
-
-Password : server-server
-
-User : android-client
-
-Password : android-client
-
-User : external-server
-
-Password : external-server
-
-
-## Customer credential
-
-User : customer_one
-
-Password : customer_one
-
-## Todos
-
-- [] Admin UI for manage users and customers credentials
+- [x] Oauth2.0 JWT Token
+- [x] Remote Token
+- [ ] Client Registration API
+- [ ] Admin UI for manage **Oauth2 user credential** and **customers**
+- [ ] Custom authorization scope
 
 ## References
 
