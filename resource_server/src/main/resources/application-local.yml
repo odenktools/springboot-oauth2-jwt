@@ -41,7 +41,11 @@ security:
       scope: read,write,trust
       grant-type: client_credentials
     resource:
-      user-info-uri: ${AUTH_SERVER_URL:http://localhost:8090}/api/v1/customer/me
+      id: resource_id
+      # URI of the user endpoint.
+      userInfoUri: ${RESOURCE_URL:http://localhost:8091}/api/v1/customer/me
+      # URI of the token decoding endpoint.
+      tokenInfoUri: ${AUTH_SERVER_URL:http://localhost:8090}/oauth/check_token
 # Logging Properties
 logging:
   path: logs

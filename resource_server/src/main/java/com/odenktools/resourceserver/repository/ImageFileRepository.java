@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface ImageFileRepository extends JpaRepository<ImageFile, Long> {
 
 	ImageFile findByShortName(String shortName);
+
+	Boolean existsByOriginName(String originName);
 }

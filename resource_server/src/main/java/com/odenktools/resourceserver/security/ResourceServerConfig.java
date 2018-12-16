@@ -1,6 +1,9 @@
 package com.odenktools.resourceserver.security;
 
+import com.odenktools.resourceserver.AppConfig;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -31,13 +34,25 @@ import java.nio.charset.Charset;
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-	public final static String RESOURCE_ID = "resource_id";
+	private static final Logger LOG = LoggerFactory.getLogger(ResourceServerConfig.class);
+
+	/**
+	 * resource_id must match on Authorization Server
+	 */
+	private String resourceId = "resource_id";
+
+	private final AppConfig appConfig;
 
 	private final CustomAccessTokenConverter customAccessTokenConverter;
 
 	@Autowired
-	public ResourceServerConfig(CustomAccessTokenConverter customAccessTokenConverter) {
+	public ResourceServerConfig(CustomAccessTokenConverter customAccessTokenConverter, AppConfig appConfig) {
 		this.customAccessTokenConverter = customAccessTokenConverter;
+		this.appConfig = appConfig;
+		LOG.debug("RESOURCE_ID {}", this.resourceId);
+		LOG.debug("CLIENT_ID {}", this.appConfig.clientId);
+		LOG.debug("CLIENT_SECRET {}", this.appConfig.clientSecret);
+		LOG.debug("INFO_URL {}", this.appConfig.tokenInfoUri);
 	}
 
 	/**
@@ -69,6 +84,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 				.anyRequest().authenticated();
 	}
 
+	/**
+	 * Decode Jwt Using PublicKey.
+	 *
+	 * @return JwtAccessTokenConverter
+	 */
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
@@ -85,15 +105,15 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	}
 
 	/**
-	 * ```resource_id``` must match in ```DATABASE```.
+	 * Matching resource_id on Authorization Server.
 	 *
-	 * @param resources
-	 * @throws Exception
+	 * @param resources ResourceServerSecurityConfigurer.
+	 * @throws Exception Error if token not accepted..
 	 */
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
 		resources.tokenServices(tokenServices());
-		resources.resourceId(ResourceServerConfig.RESOURCE_ID);
+		resources.resourceId(this.resourceId);
 	}
 
 	@Bean
@@ -101,11 +121,20 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		return new JwtTokenStore(accessTokenConverter());
 	}
 
-	@Bean
+	/**
+	 * We use remote token (Token from Authorization Server).
+	 * if token from Authorization Server deleted, resource server must revoke access token again.
+	 *
+	 * @return RemoteTokenServices.
+	 */
 	@Primary
-	public DefaultTokenServices tokenServices() {
-		final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-		defaultTokenServices.setTokenStore(tokenStore());
-		return defaultTokenServices;
+	@Bean
+	public RemoteTokenServices tokenServices() {
+		RemoteTokenServices tokenService = new RemoteTokenServices();
+		tokenService.setCheckTokenEndpointUrl(
+				this.appConfig.tokenInfoUri);
+		tokenService.setClientId(this.appConfig.clientId);
+		tokenService.setClientSecret(this.appConfig.clientSecret);
+		return tokenService;
 	}
 }

@@ -64,6 +64,13 @@ public class FileController {
 		String contentType = "";
 		String fileDownloadUri = "";
 		long fileSize;
+
+		boolean isExist = this.imageFileRepository.existsByOriginName(file.getOriginalFilename());
+
+		if (isExist) {
+			return new FileResponse("error", "File already exist.");
+		}
+
 		try (InputStream is = new BufferedInputStream(file.getInputStream())) {
 			Long id = idSeqRepository.save(new IdSeq()).getId();
 			log.debug("DATA SEQUENCE = [{}]", id);

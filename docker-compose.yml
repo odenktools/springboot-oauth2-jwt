@@ -76,6 +76,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://pg-resource-server:5432/resource_server
       - SPRING_DATASOURCE_USERNAME=odenktools
       - SPRING_DATASOURCE_PASSWORD=test1234
+      - AUTH_SERVER_URL=http://oauth2-authorization-server:8090
       - STORAGE_LOCATION=/file-server
     ports:
       - "8091:8091"
