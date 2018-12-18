@@ -1,0 +1,16 @@
+Version 0.1.0
+ - * add CRUD group * add bumpversion
+ - Update documentation
+ - - Fixing Security Token (Now using remote token service for token validation) - Fixing duplicate file upload. - Added Application Config
+ - * Fixing OauthClientDetails
+ - Change docker-compose to hikari url
+ - keep attribute
+ - * Upgrade to spring 2.0.7 * Fixing Oauth2 Bug
+ - - Fixing Authorization Server - Implement Resource Server - More Documentation
+ - Remove ResourceServerConfig
+ - fix Readme
+ - Init source code
+ - Init gitignore
+ - Initialize source code
+ - Initial commit
+
