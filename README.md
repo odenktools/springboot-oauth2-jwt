@@ -18,6 +18,7 @@ If you feel happy **Give me a STAR** to this **repository**.
 * We use [JWT](https://jwt.io/) Token RSA, production ready.
 * File upload API (Using Oauth2 Resource Server)
 * How to use Validation.
+* How to integrating QueryDSL into JPA.
 
 ## Oauth2 user credential
 
@@ -40,9 +41,9 @@ If you feel happy **Give me a STAR** to this **repository**.
 For running on Docker instance, it's really simple.
 
 * Clone this repository.
-* ```bash cd springboot-oauth2-jwt```
-* ```bash docker network create odenktools-net```
-* Run ```bash docker-compose up -d```
+* ```cd springboot-oauth2-jwt```
+* ```docker network create odenktools-net```
+* Run ```docker-compose up -d```
 * make a cup of coffee...
 * You're done! application ready to test.
 
@@ -143,7 +144,7 @@ curl --request POST \
 ```bash
 curl --request GET \
   --url http://localhost:8091/api/v1/customer/me \
-  --header 'Authorization: Bearer {{YOUR_ACCESS_TOKEN}}' \
+  --header 'Authorization: Bearer {{YOUR_ACCESS_TOKEN}}'
 ```
 
 the result will be like
@@ -163,6 +164,127 @@ curl --request POST \
   --header 'Content-Type: application/x-www-form-urlencoded' \
   --header 'content-type: multipart/form-data' \
   --form 'file=@/opt/pictures/{{IMAGE_WANT_TO_UPLOAD}}.jpg'
+```
+
+**User Group**
+
+Get all groups on database
+
+```bash
+curl --request GET \
+  --url http://localhost:8090/api/v1/admin/group/list \
+  --header 'Authorization: Bearer {{YOUR_ACCESS_TOKEN}}' \
+  --header 'Content-Type: application/json'
+```
+
+Get all groups on database with filtering data
+
+```bash
+curl --request GET \
+  --url 'http://localhost:8090/api/v1/admin/group/list?name=Super%20Admin&coded=coded&page=0&size=10' \
+  --header 'Authorization: Bearer {{YOUR_ACCESS_TOKEN}}'
+```
+
+Result
+
+```json
+{
+    "content": [
+        {
+            "id": 11,
+            "named": "johndoe",
+            "coded": "johndoe",
+            "namedDescription": "johndoe group",
+            "isActive": 1,
+            "updatedAt": null,
+            "created_at": "19-12-2018 04:40:08"
+        }
+    ],
+    "number": 0,
+    "size": 10,
+    "totalElements": 1,
+    "pageable": {
+        "sort": {
+            "sorted": false,
+            "unsorted": true
+        },
+        "offset": 0,
+        "pageSize": 10,
+        "pageNumber": 0,
+        "paged": true,
+        "unpaged": false
+    },
+    "last": true,
+    "totalPages": 1,
+    "sort": {
+        "sorted": false,
+        "unsorted": true
+    },
+    "first": true,
+    "numberOfElements": 1
+}
+```
+
+Create a new user group
+
+```bash
+curl --request POST \
+  --url http://localhost:8090/api/v1/admin/group/create \
+  --header 'Authorization: Bearer {{YOUR_ACCESS_TOKEN}}' \
+  --header 'Content-Type: application/json' \
+  --data '{\n	"named": "odenktools",\n	"coded": "odenktoolsIuX",\n	"namedDescription": "Super Admin Group",\n	"isActive": 1\n}'
+```
+
+Result
+
+```json
+{
+    "code": 200,
+    "messages": "Group with name ``John Doe`` was successfuly added"
+}
+```
+
+Get user group by id
+
+```bash
+curl --request GET \
+  --url http://localhost:8090/api/v1/admin/group/{{GROUP_ID}} \
+  --header 'Authorization: Bearer {{YOUR_ACCESS_TOKEN}}' \
+  --header 'Content-Type: application/json'
+```
+
+Result
+
+```json
+{
+    "code": 200,
+    "data": {
+        "named": "Role SuperAdmin",
+        "coded": "ROLE_SUPER_ADMIN",
+        "namedDescription": "Role For SuperAdmin",
+        "isActive": 1,
+        "createdAt": "2018-12-12T15:10:14.979122Z",
+        "updatedAt": null
+    }
+}
+```
+
+Delete user group by id
+
+```bash
+curl --request DELETE \
+  --url http://localhost:8090/api/v1/admin/group/delete/{{GROUP_ID}} \
+  --header 'Authorization: Bearer {{YOUR_ACCESS_TOKEN}}' \
+  --header 'Content-Type: application/json'
+```
+
+Result
+
+```json
+{
+    "code": 200,
+    "messages": "Group was successfuly removed."
+}
 ```
 
 ## Build Application from source

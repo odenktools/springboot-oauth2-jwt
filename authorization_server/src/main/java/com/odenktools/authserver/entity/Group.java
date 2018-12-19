@@ -1,6 +1,7 @@
 package com.odenktools.authserver.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jdk.nashorn.internal.ir.annotations.Immutable;
@@ -131,9 +132,11 @@ public class Group implements Serializable {
 			joinColumns = @JoinColumn(name = "role_id"),
 			inverseJoinColumns = @JoinColumn(name = "perm_id")
 	)
+	@JsonIgnore
 	private Set<Permission> usersPermissions;
 
 	@ManyToMany(mappedBy = "usersGroups")
+	@JsonIgnore
 	private Set<Customer> users;
 
 	public void customAddPermission(Permission usersPermissions) {

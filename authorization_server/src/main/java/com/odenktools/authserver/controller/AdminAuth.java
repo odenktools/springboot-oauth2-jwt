@@ -7,6 +7,9 @@ import com.odenktools.authserver.service.GroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -50,11 +55,41 @@ public class AdminAuth {
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.addProperty("code", HttpStatus.OK.value());
 		jsonObject.addProperty("messages",
-				String.format("Welcome again ``%s``. And Happy nice day!", principal.getName()));
+				String.format("Welcome ``%s``. And Happy nice day!", principal.getName()));
 		return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
 	}
 
 	//=========================== #START GROUP# ==============================//
+
+	/**
+	 * Get all available groups on database.
+	 *
+	 * @param name search by name.
+	 * @param coded search by coded.
+	 * @param page pagenumber. Default 0.
+	 * @param size display limit, Default 10.
+	 * @param direction sorting "ASC OR DESC", default to DESC.
+	 * @return Groups Model.
+	 */
+	@RequestMapping(value = "/group/list",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> findAllGroups(@RequestParam(name = "name", defaultValue = "") String name,
+										   @RequestParam(name = "coded", defaultValue = "") String coded,
+										   @RequestParam(required = false, defaultValue = "0") Integer page,
+										   @RequestParam(required = false, defaultValue = "10") Integer size,
+										   @RequestParam(required = false, defaultValue = "DESC") String direction) {
+
+		List<String> sortProperties = new ArrayList<>();
+		sortProperties.add("createdAt");
+		Sort sort = new Sort(Sort.Direction.fromString(direction), sortProperties);
+
+		Page<Group> listData = this.groupService
+				.findUserByNamedOrCoded(name, coded,
+						sort, PageRequest.of(page, size));
+
+		return new ResponseEntity<>(listData, HttpStatus.FOUND);
+	}
 
 	/**
 	 * Get Group detail.
@@ -62,9 +97,9 @@ public class AdminAuth {
 	 * @param id id do you want to check.
 	 * @return GroupDto
 	 */
-	@GetMapping(value = "/group/{id}",
+	@GetMapping(value = "/group",
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> findGroupById(@PathVariable Long id) {
+	public ResponseEntity<?> findGroupById(@RequestParam("id") Long id) {
 
 		Optional<Group> groupOptional = this.groupService.findById(id);
 
@@ -124,10 +159,10 @@ public class AdminAuth {
 					request.getCoded()));
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(jsonObject.toString());
 		}
-
 		this.groupService.createGroup(request);
 		jsonObject.addProperty("code", HttpStatus.OK.value());
-		jsonObject.addProperty("messages", "Ok!");
+		jsonObject.addProperty("messages", String.format("Group with name ``%s`` was successfuly added",
+				request.getNamed()));
 		return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
 	}
 
@@ -169,26 +204,26 @@ public class AdminAuth {
 	/**
 	 * Delete existing group.
 	 *
-	 * @param request Group do you want to delete.
+	 * @param id Group "id" do you want to delete.
 	 * @return JsonObject.
 	 */
-	@PutMapping(
-			value = "/group/delete",
+	@DeleteMapping(
+			value = "/group/delete/{id}",
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE
 	)
-	public ResponseEntity<?> removeGroup(@RequestBody @Valid GroupDto request) {
+	public ResponseEntity<?> removeGroup(@PathVariable("id") Long id) {
 
 		JsonObject jsonObject = new JsonObject();
 
-		if (!groupService.existById(request.getId())) {
+		if (!groupService.existById(id)) {
 			jsonObject.addProperty("code", HttpStatus.BAD_REQUEST.value());
 			jsonObject.addProperty("messages", String.format("Group with code ``%s`` not exist",
-					request.getCoded()));
+					id));
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject.toString());
 		}
 
-		boolean removed = this.groupService.removeGroup(request);
+		boolean removed = this.groupService.removeGroup(id);
 
 		if (removed) {
 			jsonObject.addProperty("code", HttpStatus.OK.value());

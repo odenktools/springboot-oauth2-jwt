@@ -38,6 +38,8 @@ allprojects {
         module {
             outputDir file('build/classes/java/main')
             testOutputDir file('build/classes/java/test')
+            sourceDirs += file("build/classes/java/main/generated")
+            generatedSourceDirs += file("build/classes/java/main/generated")
         }
     }
 }
@@ -60,6 +62,11 @@ dependencies {
     runtimeOnly('org.springframework.boot:spring-boot-devtools')
     runtimeOnly('org.postgresql:postgresql:42.2.5')
     compileOnly('org.projectlombok:lombok:1.18.4')
+
+    implementation("com.mysema.querydsl:querydsl-core:3.7.4")
+    implementation("com.mysema.querydsl:querydsl-jpa:3.7.4")
+    implementation("com.mysema.querydsl:querydsl-apt:3.7.4:jpa")
+
     //-- jackson
     implementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
     implementation('com.fasterxml.jackson.core:jackson-core:2.9.3')
