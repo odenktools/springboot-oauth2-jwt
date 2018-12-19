@@ -1,3 +1,6 @@
+Version 0.2.0:
+ - * Add QueryDSL
+
 Version 0.1.0
  - * add CRUD group * add bumpversion
  - Update documentation
