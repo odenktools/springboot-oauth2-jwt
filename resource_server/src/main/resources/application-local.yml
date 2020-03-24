@@ -6,7 +6,7 @@ spring:
       minimum-idle: 1
       maximum-pool-size: 5
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/file_server
+    url: jdbc:postgresql://localhost:5432/spring_auth_res
     username: ${POSTGRESQL_USERNAME:postgres}
     password: ${POSTGRESQL_PASSWORD:odenktools}
   jpa:

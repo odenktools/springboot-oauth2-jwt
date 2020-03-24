@@ -3,7 +3,7 @@ spring:
     banner-mode: console
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://pg-auth-server:5432/auth_server
+    url: jdbc:postgresql://pg-auth-server:5432/spring_auth_server
     username: ${POSTGRESQL_USERNAME:postgres}
     password: ${POSTGRESQL_PASSWORD:odenktools}
     hikari:
@@ -13,7 +13,7 @@ spring:
       maxLifetime: 2000000
       connectionTimeout: 30000
       poolName: OdenktoolsJPAAuthServerHikariCP
-      jdbc-url: jdbc:postgresql://localhost:5432/auth_server
+      jdbc-url: jdbc:postgresql:///pg-auth-server:5432/spring_auth_server
       driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false

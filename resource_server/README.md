@@ -12,28 +12,39 @@ gradle bootRun
 Build Jar
 
 ```bash
-gradle build -x test
+mvn package
 ```
 
 Or Build Jar without test
 
 ```bash
-gradle build -x test
+mvn package -Dmaven.test.skip=true
 ```
 
 
 Execute Jar Package
 
 ```bash
-java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8091,suspend=n -jar build/libs/resourceserver-0.1.0.jar
+java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8091,suspend=n -jar target/resourceserver-1.0.0.jar
+```
+
+OR
+
+```bash
+mvn spring-boot:run
 ```
 
 #### Build docker container
 
 ```bash
-docker build --tag odenktools/oauth2-resource-server:0.1.0 --build-arg JAR_FILE=build/libs/resourceserver-0.1.0.jar .
-docker push odenktools/oauth2-resource-server:0.1.0
-docker tag odenktools/oauth2-resource-server:0.1.0 odenktools/oauth2-resource-server:latest
+docker build --tag odenktools/oauth2-resource-server:1.0.0 --build-arg JAR_FILE=target/resourceserver-1.0.0.jar .
+docker tag odenktools/oauth2-resource-server:1.0.0 odenktools/oauth2-resource-server:latest
+```
+
+#### Publish to Cloud
+
+```bash
+docker push odenktools/oauth2-resource-server:1.0.0
 docker push odenktools/oauth2-resource-server:latest
 ```
 
@@ -41,7 +52,7 @@ docker push odenktools/oauth2-resource-server:latest
 
 MIT License
 
-Copyright (c) 2018 odenktools
+Copyright (c) 2018 - 2020 odenktools
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -13,7 +13,7 @@ If you feel happy **Give me a STAR** to this **repository**.
 * OAuth2.0 Resource Server
 * We use [PostgreSQL](https://www.postgresql.org/)
 * We use [Liquibase](https://www.liquibase.org/)
-* We use [Gradle 4.10.2](https://gradle.org/install/)
+* We use [Maven](http://maven.apache.org/install.html)
 * We use [Docker](https://docs.docker.com/install/), to simplify understanding application flow.
 * We use [JWT](https://jwt.io/) Token RSA, production ready.
 * File upload API (Using Oauth2 Resource Server)
@@ -313,14 +313,14 @@ After **create database**, build the entire project.
 
 ```bash
 cd authorization_server
-gradle build
+maven package
 ```
 
 - **Resource Server**
 
 ```bash
 cd resource_server
-gradle build
+maven package
 ```
 
 **Generate RSA KeyStore**
@@ -365,7 +365,7 @@ paste to ```main/resources/certificate``` folder
 
 MIT License
 
-Copyright (c) 2018 odenktools
+Copyright (c) 2018 - 2020 odenktools
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

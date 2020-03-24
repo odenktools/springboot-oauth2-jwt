@@ -175,4 +175,3 @@ if [[ $CLI != "" ]]; then
 else
     exit $RESULT
 fi
-

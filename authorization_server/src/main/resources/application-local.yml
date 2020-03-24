@@ -3,9 +3,9 @@ spring:
     banner-mode: console
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/auth_server
+    url: jdbc:postgresql://localhost:5432/spring_auth_server
     username: ${POSTGRESQL_USERNAME:postgres}
-    password: ${POSTGRESQL_PASSWORD:odenktools}
+    password: ${POSTGRESQL_PASSWORD:moeloet}
     hikari:
       minimum-idle: 5
       maximum-pool-size: 20
@@ -13,13 +13,13 @@ spring:
       maxLifetime: 2000000
       connectionTimeout: 30000
       poolName: OdenktoolsJPAAuthServerHikariCP
-      jdbc-url: jdbc:postgresql://localhost:5432/auth_server
+      jdbc-url: jdbc:postgresql://localhost:5432/spring_auth_server
       driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
     hibernate:
       ddl-auto: validate
-      connection: 
+      connection:
         provider_class: org.hibernate.hikaricp.internal.HikariCPConnectionProvider
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
