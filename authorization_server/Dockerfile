@@ -18,13 +18,11 @@ ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
 
 ENV PATH $PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin
 
-ENV JAVA_VERSION 8u181
-
-ENV JAVA_ALPINE_VERSION 8.181.13-r0
+ENV JAVA_VERSION 8u222
 
 RUN set -x \
-	&& apk add --update --no-cache \
-		openjdk8="$JAVA_ALPINE_VERSION" bash tzdata && \
+	&& apk add --update \
+		openjdk8 bash tzdata && \
 		rm -rf /var/cache/apk/* && \
 		[ "$JAVA_HOME" = "$(docker-java-home)" ] && \
 	ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
@@ -34,9 +32,9 @@ ARG JAR_FILE
 
 COPY ${JAR_FILE} /usr/local/bin/authserver.jar
 
-COPY wait-for-it.sh /usr/bin
+COPY wait-for-it.sh /usr/local/bin/wait-for-it.sh
 
-RUN chmod +x /usr/bin/wait-for-it.sh
+RUN chmod +x /usr/local/bin/wait-for-it.sh
 
 EXPOSE 8090
 

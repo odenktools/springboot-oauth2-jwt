@@ -63,7 +63,7 @@ services:
       - pg-auth-server
     command: |
       bash -c 'echo Waiting for database to be ready... && \
-      /usr/bin/wait-for-it.sh pg-auth-server:5432 --timeout=0 && \
+      /usr/local/bin/wait-for-it.sh pg-auth-server:5432 --timeout=0 && \
       java ${JAVA_ARGS} -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC -Djava.security.egd=file:/dev/./urandom -jar /usr/local/bin/authserver.jar'
 
   oauth2-resource-server:
@@ -86,8 +86,8 @@ services:
       - pg-resource-server
     command: |
       bash -c 'echo Waiting for database to be ready... && \
-      /usr/bin/wait-for-it.sh oauth2-authorization-server:8090 --timeout=0 && \
-      /usr/bin/wait-for-it.sh pg-resource-server:5432 --timeout=0 && \
+      /usr/local/bin/wait-for-it.sh oauth2-authorization-server:8090 --timeout=0 && \
+      /usr/local/bin/wait-for-it.sh pg-resource-server:5432 --timeout=0 && \
       java ${JAVA_ARGS} -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:+UseG1GC -Djava.security.egd=file:/dev/./urandom -jar /usr/local/bin/resourceserver.jar'
 
 networks:
