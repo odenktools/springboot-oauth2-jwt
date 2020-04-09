@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: customer_service
+# SERVER Properties
+server:
+  port: ${PORT:8091}
+  servlet:
+    session:
+      cookie:
+        name: JWT_SESSIONID

@@ -10,10 +10,7 @@ import java.util.Optional;
  * @author Odenktools.
  */
 @Repository
-public interface IOauthClientDetails extends JpaRepository<OauthClientDetails, Long> {
+public interface IOauthClientDetails extends JpaRepository<OauthClientDetails, String> {
 
 	Optional<OauthClientDetails> findByClientId(String clientId);
-	//void createApplication(OauthClientDetails client);
-	//void updateApplication(OauthClientDetails client);
-	//void deleteApplication(OauthClientDetails client);
 }
